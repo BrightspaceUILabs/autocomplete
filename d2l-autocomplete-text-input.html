@@ -1,0 +1,90 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../d2l-text-input/d2l-text-input.html">
+<link rel="import" href="all-imports.html">
+
+<dom-module id="d2l-autocomplete-text-input">
+	<template strip-whitespace>
+		<style>
+			:host {
+				display: flex;
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+
+		</style>
+		<d2l-text-input
+			id="d2l-autocomplete-text-input"
+			role="combobox"
+			aria-expanded$="[[suggestionsVisible]]"
+			aria-owns="d2l-autocomplete"
+			aria-haspopup="listbox"
+			aria-autocomplete="list"
+			aria-controls="d2l-autocomplete"
+			placeholder$="[[placeholder]]"
+			type$="[[type]]"
+			value$="{{value}}"
+		></d2l-text-input>
+		<d2l-autocomplete
+			id="d2l-autocomplete"
+			suggestions-visible="{{suggestionsVisible}}"
+			min-length="[[minLength]]"
+			for="d2l-autocomplete-text-input"
+			remote-source="[[remoteSource]]"
+			data="[[data]]"
+			select-first=[[selectFirst]]
+		></d2l-autocomplete>
+	</template>
+	<script>
+		/**
+		 * `<d2l-autocomplete-text-input>`
+		 * Polymer-based web component for integrating autocomplete with text inputs
+		 * @customElement
+		 * @polymer
+		 * @demo demo/index.hmtl
+		 */
+		class AutocompleteTextInput extends Polymer.Element {
+			static get is() { return 'd2l-autocomplete-text-input'; }
+			static get properties() {
+				return {
+					/**
+					* These properties are used by d2l-autocomplete
+					*/
+					data: {
+						type: Array,
+					},
+					minLength: {
+						type: String,
+					},
+					placeholder: {
+						type: String,
+					},
+					remoteSource: {
+						type: Boolean
+					},
+					selectFirst: {
+						type: Boolean,
+					},
+					/**
+					* These properties are used by d2l-text-input
+					*/
+					type: {
+						type: String,
+					},
+					value: {
+						type: String,
+					}
+				};
+			}
+			constructor() {
+				super();
+			}
+
+			setSuggestions(suggestions) {
+				this.$['d2l-autocomplete'].setSuggestions(suggestions);
+			}
+
+		}
+		customElements.define(AutocompleteTextInput.is, AutocompleteTextInput);
+	</script>
+</dom-module>
