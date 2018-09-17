@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../d2l-text-input/d2l-text-input.html">
+<link rel="import" href="../d2l-polymer-behaviors/d2l-id.html">
 <link rel="import" href="all-imports.html">
 
 <dom-module id="d2l-autocomplete-text-input">
@@ -14,22 +15,22 @@
 
 		</style>
 		<d2l-text-input
-			id="d2l-autocomplete-text-input"
+			id="[[_prefix('d2l-text-input')]]"
 			role="combobox"
 			aria-expanded$="[[suggestionsVisible]]"
-			aria-owns="d2l-autocomplete"
+			aria-owns="[[_prefix('d2l-autocomplete')]]"
 			aria-haspopup="listbox"
 			aria-autocomplete="list"
-			aria-controls="d2l-autocomplete"
+			aria-controls="[[_prefix('d2l-autocomplete')]]"
 			placeholder$="[[placeholder]]"
 			type$="[[type]]"
 			value$="{{value}}"
 		></d2l-text-input>
 		<d2l-autocomplete
-			id="d2l-autocomplete"
+			id="[[_prefix('d2l-autocomplete')]]"
 			suggestions-visible="{{suggestionsVisible}}"
 			min-length="[[minLength]]"
-			for="d2l-autocomplete-text-input"
+			for="[[_prefix('d2l-text-input')]]"
 			remote-source="[[remoteSource]]"
 			data="[[data]]"
 			select-first=[[selectFirst]]
@@ -47,6 +48,12 @@
 			static get is() { return 'd2l-autocomplete-text-input'; }
 			static get properties() {
 				return {
+					/**
+					* Unique Id for prefixing the autocomplete and text-input
+					*/
+					_uniqueId: {
+						type: String,
+					},
 					/**
 					* These properties are used by d2l-autocomplete
 					*/
@@ -78,6 +85,11 @@
 			}
 			constructor() {
 				super();
+				this._uniqueId = D2L.Id.getUniqueId();
+			}
+
+			_prefix(id) {
+				return this._uniqueId + '-' + id;
 			}
 
 			setSuggestions(suggestions) {

@@ -11,15 +11,7 @@
 				position: relative;
 			}
 
-			.bolded {
-				font-weight: bold;
-			}
-
 			.d2l-autocomplete-list {
-				-moz-box-sizing: border-box;
-				-ms-box-sizing: border-box;
-				-webkit-box-sizing: border-box;
-
 				background-color: white;
 				border: 1px solid var(--d2l-color-gypsum);
 				box-sizing: border-box;
@@ -34,9 +26,6 @@
 
 			.d2l-autocomplete-suggestion {
 				@apply --d2l-body-compact-text;
-				-moz-user-select: none;
-				-ms-user-select: none;
-				-webkit-user-select: none;
 
 				cursor: pointer;
 				outline: none;
@@ -47,7 +36,11 @@
 				white-space: nowrap;
 			}
 
-			.d2l-autocomplete-suggestion.selected,
+			.d2l-autocomplete-suggestion-highlighted {
+				font-weight: bold;
+			}
+
+			.d2l-autocomplete-suggestion[aria-selected="true"],
 			.d2l-autocomplete-suggestion:hover  {
       			background-color: var(--d2l-color-celestine-plus-2);
 			}
@@ -61,7 +54,7 @@
 					role="option"
 					aria-selected="false"
 					tabindex="-1"
-				><span class="bolded">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}
+				><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}
 				</li>
 			</template>
 		</ul>
@@ -210,8 +203,8 @@
 
 			connectedCallback() {
 				super.connectedCallback();
-				Polymer.RenderStatus.afterNextRender(this, () => {
-					this._input = this.parentNode.querySelector(`#${this.for}`);
+				Polymer.RenderStatus.afterNextRender(this, function() {
+					this._input = this.parentNode.querySelector('#' + this.for);
 					if (this._input === null) {
 						throw new Error('Input not found');
 					}
@@ -227,7 +220,7 @@
 					this._input.addEventListener('focus', this._boundListeners._onFocus);
 					this._input.addEventListener('input', this._boundListeners._onInput);
 					this._input.addEventListener('keydown', this._boundListeners._onKeyDown);
-				});
+				}.bind(this));
 			}
 
 			disconnectedCallback() {
@@ -255,7 +248,11 @@
 			}
 
 			_onInput(event) {
-				const handler = filter => () => (this._filter = filter);
+				const handler = function(filter) {
+					return function() {
+						this._filter = filter;
+					}.bind(this);
+				}.bind(this);
 
 				this._inputDebouncer = Polymer.Debouncer.debounce(
 					this._inputDebouncer,
@@ -316,17 +313,15 @@
 			}
 
 			_dropdownIndexChanged(index, oldIndex) {
-				Polymer.RenderStatus.afterNextRender(this, () => {
+				Polymer.RenderStatus.afterNextRender(this, function() {
 					const suggestionsListChildren = this.$['suggestions-list'].children;
 					if (oldIndex >= 0 && oldIndex < suggestionsListChildren.length) {
-						suggestionsListChildren[oldIndex].classList.remove('selected');
 						suggestionsListChildren[oldIndex].setAttribute('aria-selected', false);
 					}
 					if (index >= 0 && index < suggestionsListChildren.length) {
-						suggestionsListChildren[index].classList.add('selected');
 						suggestionsListChildren[index].setAttribute('aria-selected', true);
 					}
-				});
+				}.bind(this));
 			}
 
 			_filterChanged(filter) {
@@ -343,7 +338,9 @@
 				} else {
 					this._suggestions = filter.length === 0 || filter.length < this.minLength
 						? []
-						: this.data.filter(({ value }) => this.filterFn(value, filter));
+						: this.data.filter(function(item) {
+							return this.filterFn(item.value, filter);
+						}.bind(this));
 					this._boldedText = filter;
 					this._updateSuggestionsVisible();
 				}

@@ -65,17 +65,24 @@
 			customDemo.data = states;
 
 			const remoteSourceDemo = document.getElementById('demo-remote-source');
-			remoteSourceDemo.addEventListener('d2l-autocomplete-filter-changed', event => {
-				const filteredSuggestions = states.filter(({ value }) =>
-					value.toLowerCase().indexOf(event.detail.value.toLowerCase()) === 0);
+			remoteSourceDemo.addEventListener('d2l-autocomplete-filter-changed', function(event) {
+				const filteredSuggestions = states.filter(function(item) {
+					return item.value.toLowerCase().indexOf(event.detail.value.toLowerCase()) === 0;
+				});
+
 				// Fake async call
-				setTimeout(() => remoteSourceDemo.setSuggestions(filteredSuggestions), 400);
+				setTimeout(function() {
+					remoteSourceDemo.setSuggestions(filteredSuggestions);
+				}, 400);
 			});
 
 			// Event listeners to change heading text on selection
-			const selectionListener = id => event => {
-				document.getElementById(id).innerText = `Selection: ${event.detail.value}`;
+			const selectionListener = function(id) {
+				return function(event) {
+					document.getElementById(id).innerText = 'Selection: ' + event.detail.value;
+				};
 			};
+
 			textInputDemo.addEventListener('d2l-autocomplete-suggestion-selected',
 				selectionListener('demo-text-input-selected'));
 			customDemo.addEventListener('d2l-autocomplete-suggestion-selected',
