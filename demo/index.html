@@ -27,11 +27,11 @@
 	</head>
 	<body unresolved class="d2l-typography">
 		<div class="vertical-section-container centered">
-			<h3>d2l-autocomplete-text-input</h3>
+			<h3>d2l-autocomplete-input-text</h3>
 			<demo-snippet>
 				<template>
-					<h4 id="demo-text-input-selected">Selection: None</h4>
-					<d2l-autocomplete-text-input id="demo-text-input" class="autocomplete-input" placeholder="Enter a state"></d2l-autocomplete-text-input>
+					<h4 id="demo-input-text-selected">Selection: None</h4>
+					<d2l-autocomplete-input-text id="demo-input-text" class="autocomplete-input" placeholder="Enter a state"></d2l-autocomplete-input-text>
 				</template>
 			</demo-snippet>
 			<h3>d2l-autocomplete (custom)</h3>
@@ -59,8 +59,8 @@
 			document.body.classList.add('d2l-typography');
 
 			/*global states:true*/
-			const textInputDemo = document.getElementById('demo-text-input');
-			textInputDemo.data = states;
+			const inputTextDemo = document.getElementById('demo-input-text');
+			inputTextDemo.data = states;
 
 			const customDemo = document.getElementById('demo-custom');
 			customDemo.data = states;
@@ -84,8 +84,8 @@
 				};
 			};
 
-			textInputDemo.addEventListener('d2l-autocomplete-suggestion-selected',
-				selectionListener('demo-text-input-selected'));
+			inputTextDemo.addEventListener('d2l-autocomplete-suggestion-selected',
+				selectionListener('demo-input-text-selected'));
 			customDemo.addEventListener('d2l-autocomplete-suggestion-selected',
 				selectionListener('demo-custom-selected'));
 			remoteSourceDemo.addEventListener('d2l-autocomplete-suggestion-selected',

@@ -1,9 +1,9 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../d2l-text-input/d2l-text-input.html">
+<link rel="import" href="../d2l-inputs/d2l-input-text.html">
 <link rel="import" href="../d2l-polymer-behaviors/d2l-id.html">
 <link rel="import" href="all-imports.html">
 
-<dom-module id="d2l-autocomplete-text-input">
+<dom-module id="d2l-autocomplete-input-text">
 	<template strip-whitespace>
 		<style>
 			:host {
@@ -14,39 +14,39 @@
 
 		<d2l-autocomplete
 			data="[[data]]"
-			for="[[_prefix('d2l-text-input')]]"
+			for="[[_prefix('d2l-input-text')]]"
 			id="[[_prefix('d2l-autocomplete')]]"
 			min-length="[[minLength]]"
 			remote-source="[[remoteSource]]"
 			select-first=[[selectFirst]]
 			suggestions-visible="{{suggestionsVisible}}"
-		><d2l-text-input
+		><d2l-input-text
 			aria-autocomplete="list"
 			aria-controls$="[[_prefix('d2l-autocomplete')]]"
 			aria-owns$="[[_prefix('d2l-autocomplete')]]"
-			id="[[_prefix('d2l-text-input')]]"
+			id="[[_prefix('d2l-input-text')]]"
 			placeholder$="[[placeholder]]"
 			role="combobox"
 			slot="input"
 			type$="[[type]]"
-			value$="{{value}}"
-		></d2l-text-input>
+			value="{{value}}"
+		></d2l-input-text>
 		</d2l-autocomplete>
 	</template>
 	<script>
 		/**
-		 * `<d2l-autocomplete-text-input>`
+		 * `<d2l-autocomplete-input-text>`
 		 * Polymer-based web component for integrating autocomplete with text inputs
 		 * @customElement
 		 * @polymer
 		 * @demo demo/index.hmtl
 		 */
-		class AutocompleteTextInput extends Polymer.Element {
-			static get is() { return 'd2l-autocomplete-text-input'; }
+		class AutocompleteInputText extends Polymer.Element {
+			static get is() { return 'd2l-autocomplete-input-text'; }
 			static get properties() {
 				return {
 					/**
-					* Unique Id for prefixing the autocomplete and text-input
+					* Unique Id for prefixing the autocomplete and input-text
 					*/
 					_uniqueId: {
 						type: String,
@@ -67,13 +67,14 @@
 						type: Boolean,
 					},
 					/**
-					* These properties are used by d2l-text-input
+					* These properties are used by d2l-input-text
 					*/
 					placeholder: {
 						type: String,
 					},
 					type: {
 						type: String,
+						value: 'text'
 					},
 					value: {
 						type: String,
@@ -94,6 +95,6 @@
 			}
 
 		}
-		customElements.define(AutocompleteTextInput.is, AutocompleteTextInput);
+		customElements.define(AutocompleteInputText.is, AutocompleteInputText);
 	</script>
 </dom-module>
