@@ -21,7 +21,6 @@
 				font-size: 20px;
 			}
 			.autocomplete-input {
-				display: block;
 				width: 100%;
 			}
 		</style>
@@ -39,16 +38,18 @@
 			<demo-snippet>
 				<template>
 					<h4 id="demo-custom-selected">Selection: None</h4>
-					<input id="demo-custom-input" class="autocomplete-input" placeholder="Enter a state">
-					<d2l-autocomplete select-first id="demo-custom" for="demo-custom-input"></d2l-autocomplete>
+					<d2l-autocomplete select-first id="demo-custom" show-on-focus>
+						<input slot="input" id="demo-custom-input" class="autocomplete-input" placeholder="Enter a state">
+					</d2l-autocomplete>
 				</template>
 			</demo-snippet>
 			<h3>d2l-autocomplete (remote source)</h3>
 			<demo-snippet>
 				<template>
 					<h4 id="demo-remote-source-selected">Selection: None</h4>
-					<input id="demo-remote-source-input" class="autocomplete-input" placeholder="Enter a state">
-					<d2l-autocomplete remote-source id="demo-remote-source" for="demo-remote-source-input"></d2l-autocomplete>
+					<d2l-autocomplete remote-source id="demo-remote-source" show-on-focus>
+						<input slot="input" id="demo-remote-source-input" class="autocomplete-input" placeholder="Enter a state">
+					</d2l-autocomplete>
 				</template>
 			</demo-snippet>
 		</div>

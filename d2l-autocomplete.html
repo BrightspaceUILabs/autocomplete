@@ -1,32 +1,27 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/utils/debounce.html">
+<link rel="import" href="../d2l-dropdown/d2l-dropdown-content.html">
+<link rel="import" href="../d2l-dropdown/d2l-dropdown.html">
 
 <dom-module id="d2l-autocomplete">
 	<template strip-whitespace>
 		<style>
-			:host {
+			:host,
+			.d2l-autocomplete-dropdown-wrapper {
 				display: flex;
 				width: 100%;
-				height: 100%;
-				position: relative;
 			}
 
-			.d2l-autocomplete-list {
-				background-color: white;
-				border: 1px solid var(--d2l-color-gypsum);
-				box-sizing: border-box;
+			#d2l-autocomplete-list {
 				margin: 0;
 				max-height: 10rem;
-				overflow-y: auto;
+				overflow-y: scroll;
 				padding: 0;
-				position: absolute;
 				width: 100%;
-				z-index: 1000;
 			}
 
 			.d2l-autocomplete-suggestion {
 				@apply --d2l-body-compact-text;
-
 				cursor: pointer;
 				outline: none;
 				overflow-x: hidden;
@@ -45,19 +40,29 @@
       			background-color: var(--d2l-color-celestine-plus-2);
 			}
 		</style>
-
-		<ul id="suggestions-list" class="d2l-autocomplete-list" hidden=[[!suggestionsVisible]] role="listbox">
-			<template is="dom-repeat" items="{{_suggestions}}">
-				<li
-					class="d2l-autocomplete-suggestion"
-					on-click="_onSuggestionSelected"
-					role="option"
-					aria-selected="false"
-					tabindex="-1"
-				><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}
-				</li>
-			</template>
-		</ul>
+		<d2l-dropdown class="d2l-autocomplete-dropdown-wrapper" no-auto-open>
+			<slot id="d2l-autocomplete-input" name="input"></slot>
+			<d2l-dropdown-content
+				id="d2l-autocomplete-dropdown-content"
+				max-width="[[_dropdownWidth]]"
+				min-width="[[_dropdownWidth]]"
+				no-auto-focus="[[_selectfirst]]"
+				no-padding
+				no-pointer
+				vertical-offset="0"
+			><ul id="d2l-autocomplete-list">
+				<template is="dom-repeat" items="{{_suggestions}}">
+					<li
+						aria-selected="false"
+						class="d2l-autocomplete-suggestion"
+						on-click="_onSuggestionSelected"
+						role="option"
+						tabindex="-1"
+					><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}
+					</li>
+				</template>
+			</ul></d2l-dropdown-content>
+		</d2l-dropdown>
 	</template>
 	<script>
 		/**
@@ -151,12 +156,6 @@
 						type: Function,
 					},
 					/**
-					* Id of the input. This is used to query for the associated input
-					*/
-					for: {
-						type: String,
-					},
-					/**
 					* Minimum required length of query before searching
 					*/
 					minLength: {
@@ -203,12 +202,15 @@
 
 			connectedCallback() {
 				super.connectedCallback();
-				Polymer.RenderStatus.afterNextRender(this, function() {
-					this._input = this.parentNode.querySelector('#' + this.for);
-					if (this._input === null) {
-						throw new Error('Input not found');
-					}
+				// Add dropdown class to opener element for slot
+				this.$['d2l-autocomplete-input'].assignedNodes()[0].classList.add('d2l-dropdown-opener');
+				this._input = this.$['d2l-autocomplete-input'].assignedNodes()[0];
 
+				if (this._input === null) {
+					throw new Error('Input not found');
+				}
+
+				Polymer.RenderStatus.afterNextRender(this, function() {
 					this._boundListeners = {
 						_onBlur: this._onBlur.bind(this),
 						_onFocus: this._onFocus.bind(this),
@@ -220,6 +222,8 @@
 					this._input.addEventListener('focus', this._boundListeners._onFocus);
 					this._input.addEventListener('input', this._boundListeners._onInput);
 					this._input.addEventListener('keydown', this._boundListeners._onKeyDown);
+					this.addEventListener('d2l-dropdown-close', this._suggestionsVisibleChanged);
+					this.addEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
 				}.bind(this));
 			}
 
@@ -229,18 +233,20 @@
 				this._input.removeEventListener('focus', this._boundListeners._onFocus);
 				this._input.removeEventListener('input', this._boundListeners._onInput);
 				this._input.removeEventListener('keydown', this._boundListeners._onKeyDown);
+				this.removeEventListener('d2l-dropdown-close', this._suggestionsVisibleChanged);
+				this.removeEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
 			}
 
 			_onBlur(event) {
 				if (event.relatedTarget !== this) {
 					this._dropdownIndex = -1;
 					this._inputHasFocus = false;
-					this.suggestionsVisible = false;
 				}
 			}
 
 			_onFocus() {
 				this._inputHasFocus = true;
+				this._dropdownWidth = this._input.offsetWidth;
 				if (this.showOnFocus) {
 					this._updateSuggestionsVisible();
 					this._selectDropdownIndex(this.selectFirst ? 0 : -1);
@@ -296,7 +302,6 @@
 				this._dropdownIndex = -1;
 				this._input.value = selection;
 				this._filter = '';
-				this.suggestionsVisible = false;
 
 				this.dispatchEvent(new CustomEvent(
 					'd2l-autocomplete-suggestion-selected',
@@ -314,7 +319,7 @@
 
 			_dropdownIndexChanged(index, oldIndex) {
 				Polymer.RenderStatus.afterNextRender(this, function() {
-					const suggestionsListChildren = this.$['suggestions-list'].children;
+					const suggestionsListChildren = this.$['d2l-autocomplete-list'].children;
 					if (oldIndex >= 0 && oldIndex < suggestionsListChildren.length) {
 						suggestionsListChildren[oldIndex].setAttribute('aria-selected', false);
 					}
@@ -333,7 +338,7 @@
 							{ bubbles: true, composed: true, detail: { value: filter } }
 						));
 					} else {
-						this.suggestionsVisible = false;
+						this.$['d2l-autocomplete-dropdown-content'].close();
 					}
 				} else {
 					this._suggestions = filter.length === 0 || filter.length < this.minLength
@@ -346,9 +351,9 @@
 				}
 			}
 
-			_suggestionsVisibleChanged(suggestionsVisible) {
-				const suggestionsList = this.$['suggestions-list'];
-				suggestionsVisible
+			_suggestionsVisibleChanged() {
+				const suggestionsList = this.$['d2l-autocomplete-list'];
+				this.$['d2l-autocomplete-dropdown-content'].opened
 					? suggestionsList.setAttribute('role', 'listbox')
 					: suggestionsList.removeAttribute('role');
 			}
@@ -368,19 +373,21 @@
 			}
 
 			_scrollList(index) {
-				const suggestionsList = this.$['suggestions-list'];
+				const suggestionsList = this.$['d2l-autocomplete-list'];
 				const elem = suggestionsList.children[index];
 				if (elem.offsetTop < suggestionsList.scrollTop) {
-					suggestionsList.scrollTop = elem.offsetTop;
+					suggestionsList.scrollTop = (elem.offsetTop);
 				} else if (elem.offsetHeight + elem.offsetTop > suggestionsList.offsetHeight + suggestionsList.scrollTop) {
-					suggestionsList.scrollTop = elem.offsetTop + elem.offsetHeight - suggestionsList.offsetHeight;
+					suggestionsList.scrollTop = (elem.offsetTop + elem.offsetHeight - suggestionsList.offsetHeight);
 				}
 			}
 
 			_updateSuggestionsVisible() {
 				const meetsLength = this._filter.length >= this.minLength;
 				const hasSuggestions = this._suggestions.length > 0;
-				this.suggestionsVisible = meetsLength && hasSuggestions && this._inputHasFocus;
+				meetsLength && hasSuggestions && this._inputHasFocus
+					? this.$['d2l-autocomplete-dropdown-content'].open(false)
+					: this.$['d2l-autocomplete-dropdown-content'].close();
 			}
 
 			setSuggestions(suggestions) {
