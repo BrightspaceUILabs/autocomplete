@@ -18,7 +18,6 @@
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "chromedriver": "^2.40.0",
     "eslint": "^4.19.1",
     "eslint-config-brightspace": "^0.4.0",
     "eslint-plugin-html": "^4.0.5",
