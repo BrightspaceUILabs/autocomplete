@@ -46,7 +46,7 @@
 				id="d2l-autocomplete-dropdown-content"
 				max-width="[[_dropdownWidth]]"
 				min-width="[[_dropdownWidth]]"
-				no-auto-focus="[[_selectfirst]]"
+				no-auto-focus="[[selectFirst]]"
 				no-padding
 				no-pointer
 				vertical-offset="0"
@@ -113,6 +113,12 @@
 					_boldedText: {
 						type: String,
 						value: '',
+					},
+					/**
+					* Used to set the width of the dropdown
+					*/
+					_dropdownWidth: {
+						type: Number,
 					},
 					/**
 					* The input element associated with the autocomplete
@@ -202,13 +208,15 @@
 
 			connectedCallback() {
 				super.connectedCallback();
-				// Add dropdown class to opener element for slot
-				this.$['d2l-autocomplete-input'].assignedNodes()[0].classList.add('d2l-dropdown-opener');
-				this._input = this.$['d2l-autocomplete-input'].assignedNodes()[0];
+				this._input = this.$['d2l-autocomplete-input'].assignedNodes() &&
+					this.$['d2l-autocomplete-input'].assignedNodes()[0];
 
-				if (this._input === null) {
+				if (!this._input) {
 					throw new Error('Input not found');
 				}
+
+				// Add dropdown class to opener element, the input
+				this._input.classList.add('d2l-dropdown-opener');
 
 				Polymer.RenderStatus.afterNextRender(this, function() {
 					this._boundListeners = {

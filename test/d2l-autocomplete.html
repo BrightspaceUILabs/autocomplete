@@ -14,21 +14,24 @@
 		<test-fixture id="basic">
 			<template>
 				<div>
-					<input id="basic-test-input">
-					<d2l-autocomplete id="basic-test" for="basic-test-input"></d2l-autocomplete>
+					<d2l-autocomplete id="basic-test">
+						<input slot="input">
+					</d2l-autocomplete>
 				</div>
 			</template>
 		</test-fixture>
 		<test-fixture id="remote-source">
 			<template>
 				<div>
-					<input id="remote-source-input">
-					<d2l-autocomplete remote-source id="remote-source-test" for="remote-source-input"></d2l-autocomplete>
+
+					<d2l-autocomplete remote-source id="remote-source-test">
+						<input slot="input">
+					</d2l-autocomplete>
 				</div>
 			</template>
 		</test-fixture>
 		<script>
-			describe('<d2l-autocomplete-text-input>', function() {
+			describe('<d2l-autocomplete-input-text>', function() {
 				let autocomplete;
 				let input;
 
@@ -85,7 +88,7 @@
 							Polymer.RenderStatus.afterNextRender(basicFixture, function() {
 								expect(getSuggestionElements()[0]).to.equal(getSelectedElement());
 								done();
-							})
+							});
 						});
 
 						it('should only render the suggestions if the input value meets the min-length', function() {
@@ -93,25 +96,23 @@
 							setInputValue('al');
 							Polymer.flush();
 
-							const suggestions = getSuggestionElements();
 							expect(getSuggestionElements().length).to.equal(0);
-
 
 							setInputValue('ala');
 							Polymer.flush();
 							expect(getSuggestionElements().length).to.equal(1);
-						})
-					})
+						});
+					});
 
 					describe('keyboard-behaviour', function() {
-						const { UP, DOWN, ENTER, ESCAPE, HOME, END} ={
+						const { UP, DOWN, ENTER, ESCAPE, HOME, END } = {
 							UP: 38,
 							DOWN: 40,
 							ENTER: 13,
 							ESCAPE: 27,
 							HOME: 36,
 							END: 35,
-						}
+						};
 
 						let suggestions;
 
@@ -126,7 +127,7 @@
 							Polymer.RenderStatus.afterNextRender(basicFixture, function() {
 								expect(suggestions[1]).to.equal(getSelectedElement());
 								done();
-							})
+							});
 						});
 
 						it('should move the selected suggestion to the previous element when the DOWN key is pressed', function(done) {
@@ -135,7 +136,7 @@
 							Polymer.RenderStatus.afterNextRender(basicFixture, function() {
 								expect(suggestions[suggestions.length - 2]).to.equal(getSelectedElement());
 								done();
-							})
+							});
 						});
 
 						it('should select the first suggestion when the HOME key is pressed', function(done) {
@@ -143,7 +144,7 @@
 							Polymer.RenderStatus.afterNextRender(basicFixture, function() {
 								expect(suggestions[0]).to.equal(getSelectedElement());
 								done();
-							})
+							});
 						});
 
 						it('should select the last suggestion when the END key is pressed', function(done) {
@@ -151,7 +152,7 @@
 							Polymer.RenderStatus.afterNextRender(basicFixture, function() {
 								expect(suggestions[suggestions.length - 1]).to.equal(getSelectedElement());
 								done();
-							})
+							});
 						});
 
 						it('should fire an event when a suggestion is selected and ENTER is pressed', function(done) {
