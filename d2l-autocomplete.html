@@ -8,6 +8,10 @@
 		<style>
 			:host,
 			.d2l-autocomplete-dropdown-wrapper {
+				width: 100%;
+			}
+
+			.d2l-dropdown-opener {
 				display: flex;
 				width: 100%;
 			}
@@ -41,7 +45,9 @@
 			}
 		</style>
 		<d2l-dropdown class="d2l-autocomplete-dropdown-wrapper" no-auto-open>
-			<slot id="d2l-autocomplete-input" name="input"></slot>
+			<div class="d2l-dropdown-opener">
+				<slot id="d2l-autocomplete-input" name="input"></slot>
+			</div>
 			<d2l-dropdown-content
 				id="d2l-autocomplete-dropdown-content"
 				max-width="[[_dropdownWidth]]"
@@ -208,15 +214,14 @@
 
 			connectedCallback() {
 				super.connectedCallback();
+
+				// Query slot for the input element
 				this._input = this.$['d2l-autocomplete-input'].assignedNodes() &&
 					this.$['d2l-autocomplete-input'].assignedNodes()[0];
 
 				if (!this._input) {
 					throw new Error('Input not found');
 				}
-
-				// Add dropdown class to opener element, the input
-				this._input.classList.add('d2l-dropdown-opener');
 
 				Polymer.RenderStatus.afterNextRender(this, function() {
 					this._boundListeners = {
