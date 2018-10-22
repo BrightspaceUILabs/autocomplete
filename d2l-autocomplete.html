@@ -8,6 +8,10 @@
 		<style>
 			:host,
 			.d2l-autocomplete-dropdown-wrapper {
+				width: 100%;
+			}
+
+			.d2l-dropdown-opener {
 				display: flex;
 				width: 100%;
 			}
@@ -17,7 +21,7 @@
 				max-height: 10rem;
 				overflow-y: scroll;
 				padding: 0;
-				width: 100%;
+				width: calc(100% - 2px);
 			}
 
 			.d2l-autocomplete-suggestion {
@@ -41,12 +45,14 @@
 			}
 		</style>
 		<d2l-dropdown class="d2l-autocomplete-dropdown-wrapper" no-auto-open>
-			<slot id="d2l-autocomplete-input" name="input"></slot>
+			<div class="d2l-dropdown-opener">
+				<slot id="d2l-autocomplete-input" name="input"></slot>
+			</div>
 			<d2l-dropdown-content
 				id="d2l-autocomplete-dropdown-content"
 				max-width="[[_dropdownWidth]]"
 				min-width="[[_dropdownWidth]]"
-				no-auto-focus="[[_selectfirst]]"
+				no-auto-focus="[[selectFirst]]"
 				no-padding
 				no-pointer
 				vertical-offset="0"
@@ -113,6 +119,12 @@
 					_boldedText: {
 						type: String,
 						value: '',
+					},
+					/**
+					* Used to set the width of the dropdown
+					*/
+					_dropdownWidth: {
+						type: Number,
 					},
 					/**
 					* The input element associated with the autocomplete
@@ -202,11 +214,12 @@
 
 			connectedCallback() {
 				super.connectedCallback();
-				// Add dropdown class to opener element for slot
-				this.$['d2l-autocomplete-input'].assignedNodes()[0].classList.add('d2l-dropdown-opener');
-				this._input = this.$['d2l-autocomplete-input'].assignedNodes()[0];
 
-				if (this._input === null) {
+				// Query slot for the input element
+				this._input = this.$['d2l-autocomplete-input'].assignedNodes() &&
+					this.$['d2l-autocomplete-input'].assignedNodes()[0];
+
+				if (!this._input) {
 					throw new Error('Input not found');
 				}
 
