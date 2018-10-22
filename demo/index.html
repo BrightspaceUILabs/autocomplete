@@ -66,7 +66,7 @@
 			customDemo.data = states;
 
 			const remoteSourceDemo = document.getElementById('demo-remote-source');
-			remoteSourceDemo.addEventListener('d2l-autocomplete-filter-changed', function(event) {
+			remoteSourceDemo.addEventListener('d2l-autocomplete-filter-change', function(event) {
 				const filteredSuggestions = states.filter(function(item) {
 					return item.value.toLowerCase().indexOf(event.detail.value.toLowerCase()) === 0;
 				});

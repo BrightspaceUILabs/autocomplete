@@ -85,7 +85,7 @@ autocomplete.filterFn = (value, filter) => value === filter;
 ### Remote Source
 Set `remote-source` on the autocomplete.
 
-Add an event listener for the `d2l-autocomplete-filter-changed` event, and set the suggestions manually after fetching the filtered options.
+Add an event listener for the `d2l-autocomplete-filter-change` event, and set the suggestions manually after fetching the filtered options.
 
 E.g.,
 ```html
@@ -93,7 +93,7 @@ E.g.,
 ```
 
 ```js
-autocomplete.addEventListener('d2l-autocomplete-filter-changed', event => {
+autocomplete.addEventListener('d2l-autocomplete-filter-change', event => {
 	fetchResultsFromRemoteSource(event.detail.value)
 		.then(results => autocomplete.setSuggestions(results))
 })

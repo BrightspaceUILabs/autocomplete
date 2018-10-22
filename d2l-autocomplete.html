@@ -347,7 +347,7 @@
 					if (filter.length >= this.minLength) {
 						// Fire event for parent component to handle suggestions
 						this.dispatchEvent(new CustomEvent(
-							'd2l-autocomplete-filter-changed',
+							'd2l-autocomplete-filter-change',
 							{ bubbles: true, composed: true, detail: { value: filter } }
 						));
 					} else {
