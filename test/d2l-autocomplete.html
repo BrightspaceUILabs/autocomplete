@@ -188,7 +188,7 @@
 					});
 
 					it('should fire an event when the input changes', function(done) {
-						autocomplete.addEventListener('d2l-autocomplete-filter-changed', function(event) {
+						autocomplete.addEventListener('d2l-autocomplete-filter-change', function(event) {
 							expect(event.detail.value).to.equal('a');
 							done();
 						});

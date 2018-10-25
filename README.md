@@ -14,22 +14,24 @@ bower install d2l-autocomplete
 
 ## Usage
 
-Include the [webcomponents.js](http://webcomponents.org/polyfills/) polyfill loader (for browsers who don't natively support web components), then import `d2l-autocomplete.html`:
+Include the [webcomponents.js](http://webcomponents.org/polyfills/) polyfill loader (for browsers who don't natively support web components), then import the appropriate `d2l-autocomplete` components as needed:
 
 ```html
 <head>
 	<script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-	<link rel="import" href="bower_components/d2l-autocomplete/d2l-autocomplete.html">
 </head>
 ```
 
+## Components
+
+### Text Input
 <!---
 ```
-<custom-element-demo>
+<custom-element-demo height="400"
   <template>
     <script src="../webcomponentsjs/webcomponents-loader.js"></script>
     <link rel="import" href="../d2l-typography/d2l-typography.html">
-    <link rel="import" href="d2l-autocomplete.html">
+    <link rel="import" href="d2l-autocomplete-input-text.html">
     <custom-style include="d2l-typography">
       <style is="custom-style" include="d2l-typography"></style>
     </custom-style>
@@ -40,12 +42,61 @@ Include the [webcomponents.js](http://webcomponents.org/polyfills/) polyfill loa
       }
     </style>
     <next-code-block></next-code-block>
+	<script>
+		const autocomplete = document.getElementById('my-autocomplete')
+		autocomplete.data = [
+			{ value: 'Alabama' },
+			{ value: 'Alaska' },
+		]
+	</script>
   </template>
 </custom-element-demo>
 ```
 -->
 ```html
-<d2l-autocomplete>My element</d2l-autocomplete>
+<d2l-autocomplete-input-text id="my-autocomplete"></d2l-autocomplete-input-text>
+```
+
+```js
+const autocomplete = document.getElementById('my-autocomplete')
+autocomplete.data = [
+	{ value: 'Option 1' },
+	{ value: 'Option 2' },
+]
+
+/**
+ * The filter function can be changed - it should accept two arguments (value, filter)
+ * and return true if `value` should be in the filtered list.
+ * E.g., Only return values that match the entered filter exactly
+ */
+autocomplete.filterFn = (value, filter) => value === filter;
+```
+
+### Custom Input
+
+```html
+
+<d2l-autocomplete id="my-autocomplete">
+	<input id="my-input" slot="input">
+</d2l-autocomplete>
+<!-- Set data as above -->
+```
+
+### Remote Source
+Set `remote-source` on the autocomplete.
+
+Add an event listener for the `d2l-autocomplete-filter-change` event, and set the suggestions manually after fetching the filtered options.
+
+E.g.,
+```html
+<d2l-autocomplete-input-text id="my-autocomplete" remote-source></d2l-autocomplete-input-text>
+```
+
+```js
+autocomplete.addEventListener('d2l-autocomplete-filter-change', event => {
+	fetchResultsFromRemoteSource(event.detail.value)
+		.then(results => autocomplete.setSuggestions(results))
+})
 ```
 
 ## Developing, Testing and Contributing
