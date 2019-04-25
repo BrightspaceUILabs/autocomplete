@@ -307,6 +307,12 @@
 			}
 
 			_onSuggestionSelected(event) {
+				// For IE11
+				Number.isInteger = Number.isInteger || function(value) {
+					return typeof value === "number" &&
+						isFinite(value) &&
+						Math.floor(value) === value;
+				};
 				const index = Number.isInteger(event)
 					? event
 					: event.model && event.model.index;
