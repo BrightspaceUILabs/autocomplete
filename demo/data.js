@@ -1,5 +1,5 @@
-/* exported states*/
-const states = [
+/* exported states */
+const states = [ // eslint-disable-line
 	{ value: 'Alabama' },
 	{ value: 'Alaska' },
 	{ value: 'American Samoa' },
