@@ -59,7 +59,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 			</ul></d2l-dropdown-content>
 		</d2l-dropdown>
 	</template>
-	
+
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
@@ -301,7 +301,7 @@ class Autocomplete extends PolymerElement {
 	_onSuggestionSelected(event) {
 		// For IE11
 		Number.isInteger = Number.isInteger || function(value) {
-			return typeof value === "number" &&
+			return typeof value === 'number' &&
 				isFinite(value) &&
 				Math.floor(value) === value;
 		};
