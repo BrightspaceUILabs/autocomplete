@@ -76,7 +76,7 @@ class AutocompleteInputText extends PolymerElement {
 	}
 
 	setSuggestions(suggestions) {
-		this.shadowRoot.querySelector(`#${this._prefix('d2l-autocomplete')}`).setSuggestions(suggestions);
+		this.shadowRoot.querySelector('#' + this._prefix('d2l-autocomplete')).setSuggestions(suggestions);
 	}
 
 }
