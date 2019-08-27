@@ -198,6 +198,27 @@ describe('<d2l-autocomplete-input-text>', function() {
 			setInputValue('a');
 		});
 
+		it('should fire an event when the input is empty', function(done) {
+			setInputValue('Alaba');
+
+			autocomplete.addEventListener('d2l-autocomplete-filter-change', function(event) {
+				expect(event.detail.value).to.equal('');
+				done();
+			});
+			setInputValue('');
+		});
+
+		it('should not fire an event when the filter is less than min length', function(done) {
+			autocomplete.setAttribute('min-length', 3);
+
+			autocomplete.addEventListener('d2l-autocomplete-filter-change', function() {
+				assert.fail('Event should not have fired');
+				done();
+			});
+			setInputValue('Al');
+			done();
+		});
+
 		it('should render the suggestions when calling setSuggestions', function() {
 			setInputValue('a');
 			const expectedSuggestions = ['Alaska', 'Argentina'];
