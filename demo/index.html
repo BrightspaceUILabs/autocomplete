@@ -104,10 +104,11 @@ customDemo.data = states;
 
 const remoteSourceDemo = document.getElementById('demo-remote-source');
 remoteSourceDemo.addEventListener('d2l-autocomplete-filter-change', function(event) {
-	const filteredSuggestions = states.filter(function(item) {
+	const filterFunction = function(item) {
 		return item.value.toLowerCase().indexOf(event.detail.value.toLowerCase()) === 0;
-	});
+	};
 
+	const filteredSuggestions = states.filter(filterFunction);
 	// Fake async call
 	setTimeout(function() {
 		remoteSourceDemo.setSuggestions(filteredSuggestions);
@@ -118,6 +119,7 @@ remoteSourceDemo.addEventListener('d2l-autocomplete-filter-change', function(eve
 const selectionListener = function(id) {
 	return function(event) {
 		document.getElementById(id).innerText = 'Selection: ' + event.detail.value;
+		console.log(event.type, event.detail.value); // eslint-disable-line no-console
 	};
 };
 
