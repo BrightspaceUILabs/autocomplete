@@ -99,6 +99,13 @@ autocomplete.addEventListener('d2l-autocomplete-filter-change', event => {
 })
 ```
 
+## Events
+
+- `d2l-autocomplete-filter-change` (remote source only)
+  - Emitted whenever the filter changes, provided the filter is at least `min-length` characters long (`default: 1`). Also fires when the input is cleared.
+- `d2l-autocomplete-suggestion-selected`
+  - Emitted when a suggestion from the dropdown is selected (keyboard or mouse).
+
 ## Developing, Testing and Contributing
 
 After cloning the repo, run `npm install` to install dependencies.

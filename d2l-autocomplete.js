@@ -348,8 +348,11 @@ class Autocomplete extends PolymerElement {
 					'd2l-autocomplete-filter-change',
 					{ bubbles: true, composed: true, detail: { value: filter } }
 				));
-			} else {
-				this.$['d2l-autocomplete-dropdown-content'].close();
+			} else if (filter.length === 0) {
+				this.dispatchEvent(new CustomEvent(
+					'd2l-autocomplete-filter-change',
+					{ bubbles: true, composed: true, detail: { value: '' } }
+				));
 			}
 		} else {
 			this._suggestions = filter.length === 0 || filter.length < this.minLength
