@@ -12,12 +12,8 @@ script:
     echo "Not a pull request and/or no secure environment variables, running headless tests...";
     npm run test:polymer:local || travis_terminate 1;
   fi
-- |
-  if [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_EVENT_TYPE != "cron" ]; then
-    echo "Not a Pull Request and on branch master so bumping version";
-    frauci-update-version;
-    export TRAVIS_TAG=$(frauci-get-version)
-  fi
+after_success:
+- frauci-update-version -d=skip && export TRAVIS_TAG=$(frauci-get-version)
 deploy:
   provider: releases
   api_key: "$GITHUB_RELEASE_TOKEN"
@@ -32,4 +28,3 @@ env:
   - secure: qclkwMr10cPChixhhrBA4L59pcDXh+b3FamYCqalK+neVyAX+ceHFY4UENoTVkusaLESyjT4tzVDZka5bmx+cT0iKuezaQAUmp5brETJMDt1QPmYOmyQ2lie44WX97RBdBUEZyXVEwtaKeLIoebGfQIDrL6mAsJ9/CA6B332p2qmwAWBe/lk4+xhlhFbfWH6CQLy+JQ9gy2YluduFxOkk+DP8cSvxeV6s0bmN75DOJyD9ztDHbFRqcqnP1JQr97+Czzw6rCRIYWl0v3iOYT7iqzmF6B+iw+VaPrgs3hre0tdOrWblqDi3aVGZquPy7qJj5aM+I9EWHGZlzcPQZy5zbz/WOtuQd6xNZz+Norqs7m8WBVE4oskveWsI30pP6snj4odNjF0l5EAJpZ98JFURDz6s20qcpTC13ZFN6scaMfXSQVBAa3VnG3FSTgud+9SSc/pM770TJNXf7lQ2HWlbdNIMbrQ5u4CPC6MxAhVsJsBIgbsCRx/Ksm+JR4r/gUia6i8qZs0hInKwt7/HIp4Ez3OJpD5rE7CsiXizgAtnq61BG3M1XbPaRGFvQX/VgmQWcHoozCLh8kDw278RhZa6QaqozE0HcgtOZW+Z/sHcq8DwI8b9ykoxW0mdj89VLbJLJggdupUuoptslq3WX8DlAeaU1OY81U2Lni8cC8XtN0=
   # GITHUB_RELEASE_TOKEN
   - secure: OJ7HZw8QxrJy0ItfMrUSr+YPvL+yOKoCFPTU2jJtHkGHmWElxJX/8ORiQVcT6buoOJmYI55omhGNVKWPfIkJQ1Q0gFbiDvz5eAKzBkXnoUqn8U/4oKO5Zm2eZXdLJZvduRRZbrRfrIF/vmgDw/TJ8ysOtSYpSvaenQNArj8ONZRLGht4IBCmn+fvDUXKFenHUXMMnVFlz3h0TkIwpE6vttzMuyUjvTAI0hZoZ25mvxxZhjqv46xrhd1BQQ6I4qmmlJLMGuds93V61w+0K4DFepMEOVtFMAAjyDInZ62dTTlAMB9lTkYb8FHYtR+ELQZ1id7ux5sN5ZHKEgw4m8SzjbUv5VNII1Uue9xDuzZTGvHnVInmbWwggjCbWpd21LI/a0X3Gfb6dq1FuWRfMLt80hxfzN5opp+Zhyal6HKAfRgI7Cd5oK6cXYyw5+21o4kRRhE2DNADlJp7+uVwjQoUYhc+3qdHOXbNtCfSFE138PfRiwLcWI0ZnZIQbeYuhHfQwTBWwScD5XfQuw6D9EPB/Vo4X9yy6q3FPnJjmV1TdEgh545bFKtk0ftyDebjmZbLNuy80wfKYezX4c+slgP+JI/eLLXKdRTxAlRNhehRpMX16NSwflOxXjDOG8zWGpvAwPY7HGenAu7ovXi2Fx8b/Ly0J2vzbK38TM0EnxCMie8=
-
