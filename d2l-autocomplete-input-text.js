@@ -13,7 +13,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 
 		</style>
 
-		<d2l-autocomplete data="[[data]]" id="[[_prefix('d2l-autocomplete')]]" min-length="[[minLength]]" remote-source="[[remoteSource]]" select-first="[[selectFirst]]"><d2l-input-text aria-autocomplete="list" aria-controls$="[[_prefix('d2l-autocomplete')]]" aria-owns$="[[_prefix('d2l-autocomplete')]]" id="[[_prefix('d2l-input-text')]]" placeholder$="[[placeholder]]" role="combobox" slot="input" type$="[[type]]" value="{{value}}"></d2l-input-text>
+		<d2l-autocomplete data="[[data]]" id="[[_prefix('d2l-autocomplete')]]" min-length="[[minLength]]" remote-source="[[remoteSource]]" select-first="[[selectFirst]]" show-on-focus="[[showOnFocus]]"><d2l-input-text aria-autocomplete="list" aria-controls$="[[_prefix('d2l-autocomplete')]]" aria-owns$="[[_prefix('d2l-autocomplete')]]" id="[[_prefix('d2l-input-text')]]" placeholder$="[[placeholder]]" role="combobox" slot="input" type$="[[type]]" value="{{value}}"></d2l-input-text>
 		</d2l-autocomplete>
 	</template>
 </dom-module>`;
@@ -49,6 +49,9 @@ class AutocompleteInputText extends PolymerElement {
 				type: Boolean
 			},
 			selectFirst: {
+				type: Boolean,
+			},
+			showOnFocus: {
 				type: Boolean,
 			},
 			/**
