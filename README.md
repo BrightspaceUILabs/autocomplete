@@ -61,7 +61,7 @@ Include the [webcomponents.js](http://webcomponents.org/polyfills/) polyfill loa
 const autocomplete = document.getElementById('my-autocomplete')
 autocomplete.data = [
 	{ value: 'Option 1' },
-	{ value: 'Option 2' }
+	{ value: 'Option 2' },
 ]
 
 /**
