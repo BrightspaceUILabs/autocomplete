@@ -142,8 +142,8 @@ npm test
 
 [bower-url]: http://bower.io/search/?q=d2l-autocomplete
 [bower-image]: https://badge.fury.io/bo/d2l-autocomplete.svg
-[ci-url]: https://travis-ci.org/BrightspaceUI/autocomplete
-[ci-image]: https://travis-ci.org/BrightspaceUI/autocomplete.svg?branch=master
+[ci-url]: https://travis-ci.com/BrightspaceUI/autocomplete
+[ci-image]: https://travis-ci.com/BrightspaceUI/autocomplete.svg?branch=master
 
 ## Versioning & Releasing
 
