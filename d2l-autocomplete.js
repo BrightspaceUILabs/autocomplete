@@ -51,12 +51,26 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 			<div class="d2l-dropdown-opener">
 				<slot id="d2l-autocomplete-input" name="input"></slot>
 			</div>
-			<d2l-dropdown-content id="d2l-autocomplete-dropdown-content" max-width="[[_dropdownWidth]]" min-width="[[_dropdownWidth]]" no-auto-focus="[[selectFirst]]" no-padding="" no-pointer="" vertical-offset="0"><ul id="d2l-autocomplete-list">
+			<d2l-dropdown-content
+				id="d2l-autocomplete-dropdown-content"
+				max-width="[[_dropdownWidth]]"
+				min-width="[[_dropdownWidth]]"
+				no-auto-focus="[[selectFirst]]"
+				no-padding=""
+				no-pointer=""
+				vertical-offset="0"
+			><ul id="d2l-autocomplete-list">
 				<template is="dom-repeat" items="{{_suggestions}}">
-					<li aria-selected="false" class="d2l-autocomplete-suggestion" on-click="_onSuggestionSelected" role="option" tabindex="-1"><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}
-					</li>
+					<li
+						aria-selected="false"
+						class="d2l-autocomplete-suggestion"
+						on-click="_onSuggestionSelected"
+						role="option"
+						tabindex="-1"
+					><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}</li>
 				</template>
-			</ul></d2l-dropdown-content>
+			</ul>
+			</d2l-dropdown-content>
 		</d2l-dropdown>
 	</template>
 
