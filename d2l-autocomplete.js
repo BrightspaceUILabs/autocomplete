@@ -326,7 +326,7 @@ class Autocomplete extends PolymerElement {
 
 		this._dropdownIndex = -1;
 		this._input.value = selection;
-		this._filter = '';
+		this._filter = selection;
 		this._inputHasFocus = false;
 
 		this._updateSuggestionsVisible();
