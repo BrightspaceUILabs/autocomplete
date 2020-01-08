@@ -9,30 +9,20 @@ const $_documentContainer = document.createElement('template');
 $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 	<template strip-whitespace="">
 		<style>
-			:host,
-			.d2l-autocomplete-dropdown-wrapper {
-				width: 100%;
-			}
-
-			.d2l-dropdown-opener {
-				display: flex;
-				width: 100%;
-			}
-
 			#d2l-autocomplete-list {
 				margin: 0;
 				max-height: 10rem;
 				overflow-y: scroll;
 				padding: 0;
-				width: calc(100% - 2px);
 			}
 
 			.d2l-autocomplete-suggestion {
 				@apply --d2l-body-compact-text;
 				cursor: pointer;
+				margin-right: 0.1rem;
 				outline: none;
 				overflow-x: hidden;
-				padding: 0.4rem 0.75rem;
+				padding: 0.4rem 0.7rem;
 				text-align: left;
 				text-overflow: ellipsis;
 				white-space: nowrap;
@@ -58,16 +48,18 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 				no-auto-focus="[[selectFirst]]"
 				no-padding=""
 				no-pointer=""
-				vertical-offset="0"
-			><ul id="d2l-autocomplete-list">
+				vertical-offset="5"
+			><ul id="d2l-autocomplete-list" role="listbox">
 				<template is="dom-repeat" items="{{_suggestions}}">
 					<li
+						aria-label$="[[item.value]]"
 						aria-selected="false"
+						id="d2l-autocomplete-list-item-[[index]]"
 						class="d2l-autocomplete-suggestion"
 						on-click="_onSuggestionSelected"
 						role="option"
 						tabindex="-1"
-					><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _boldedText)}}</span>{{_computeText(item.value, _boldedText)}}</li>
+					><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _filter)}}</span>{{_computeText(item.value, _filter)}}</li>
 				</template>
 			</ul>
 			</d2l-dropdown-content>
@@ -108,7 +100,6 @@ class Autocomplete extends PolymerElement {
 			_filter: {
 				type: String,
 				value: '',
-				observer: '_filterChanged',
 			},
 			/**
 			* Index of the currently 'selected' suggestion. This changes on up/down keypress
@@ -117,14 +108,6 @@ class Autocomplete extends PolymerElement {
 				type: Number,
 				value: -1,
 				observer: '_dropdownIndexChanged'
-			},
-			/**
-			* `_computeText` and `_computeBoldText` observe this property and update
-			* the bolding of text when this changes
-			*/
-			_boldedText: {
-				type: String,
-				value: '',
 			},
 			/**
 			* Used to set the width of the dropdown
@@ -228,19 +211,19 @@ class Autocomplete extends PolymerElement {
 		if (!this._input) {
 			throw new Error('Input not found');
 		}
+		this._input.setAttribute('aria-autocomplete', 'list');
 
 		afterNextRender(this, function() {
 			this._boundListeners = {
 				_onBlur: this._onBlur.bind(this),
 				_onFocus: this._onFocus.bind(this),
 				_onInput: this._onInput.bind(this),
-				_onKeyDown: this._onKeyDown.bind(this),
 			};
 
 			this._input.addEventListener('blur', this._boundListeners._onBlur);
 			this._input.addEventListener('focus', this._boundListeners._onFocus);
 			this._input.addEventListener('input', this._boundListeners._onInput);
-			this._input.addEventListener('keydown', this._boundListeners._onKeyDown);
+			this.addEventListener('keydown', this._onKeyDown);
 			this.addEventListener('d2l-dropdown-close', this._suggestionsVisibleChanged);
 			this.addEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
 		}.bind(this));
@@ -251,7 +234,7 @@ class Autocomplete extends PolymerElement {
 		this._input.removeEventListener('blur', this._boundListeners._onBlur);
 		this._input.removeEventListener('focus', this._boundListeners._onFocus);
 		this._input.removeEventListener('input', this._boundListeners._onInput);
-		this._input.removeEventListener('keydown', this._boundListeners._onKeyDown);
+		this.removeEventListener('keydown', this._onKeyDown);
 		this.removeEventListener('d2l-dropdown-close', this._suggestionsVisibleChanged);
 		this.removeEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
 	}
@@ -263,10 +246,10 @@ class Autocomplete extends PolymerElement {
 		}
 	}
 
-	_onFocus() {
+	_onFocus(event) {
 		this._inputHasFocus = true;
 		this._dropdownWidth = this._input.offsetWidth;
-		if (this.showOnFocus) {
+		if (this.showOnFocus && event.relatedTarget !== this) {
 			this._updateSuggestionsVisible();
 			this._selectDropdownIndex(this.selectFirst ? 0 : -1);
 		}
@@ -275,7 +258,7 @@ class Autocomplete extends PolymerElement {
 	_onInput(event) {
 		const handler = function(filter) {
 			return function() {
-				this._filter = filter;
+				this._filterChanged(filter);
 			}.bind(this);
 		}.bind(this);
 
@@ -326,7 +309,6 @@ class Autocomplete extends PolymerElement {
 
 		this._dropdownIndex = -1;
 		this._input.value = selection;
-		this._filter = selection;
 		this._inputHasFocus = false;
 
 		this._updateSuggestionsVisible();
@@ -334,14 +316,17 @@ class Autocomplete extends PolymerElement {
 			'd2l-autocomplete-suggestion-selected',
 			{ bubbles: true, composed: true, detail: { value: selection } }
 		));
+
+		this._input.focus();
+		this._inputHasFocus = true;
 	}
 
-	_computeBoldText(text, boldedText) {
-		return text.slice(0, boldedText.length);
+	_computeBoldText(text, filter) {
+		return text.slice(0, filter.length);
 	}
 
-	_computeText(text, boldedText) {
-		return text.slice(boldedText.length);
+	_computeText(text, filter) {
+		return text.slice(filter.length);
 	}
 
 	_dropdownIndexChanged(index, oldIndex) {
@@ -352,6 +337,7 @@ class Autocomplete extends PolymerElement {
 			}
 			if (index >= 0 && index < suggestionsListChildren.length) {
 				suggestionsListChildren[index].setAttribute('aria-selected', true);
+				suggestionsListChildren[index].focus();
 			}
 		}.bind(this));
 	}
@@ -376,7 +362,7 @@ class Autocomplete extends PolymerElement {
 				: this.data.filter(function(item) {
 					return this.filterFn(item.value, filter);
 				}.bind(this));
-			this._boldedText = filter;
+			this._filter = filter;
 			this._updateSuggestionsVisible();
 		}
 	}
@@ -422,7 +408,7 @@ class Autocomplete extends PolymerElement {
 
 	setSuggestions(suggestions) {
 		this._suggestions = suggestions;
-		this._boldedText = this._filter;
+		this._filter = this._input.value;
 		this._updateSuggestionsVisible();
 	}
 
