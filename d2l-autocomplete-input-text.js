@@ -21,9 +21,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 			select-first="[[selectFirst]]"
 			show-on-focus="[[showOnFocus]]"
 		><d2l-input-text
-			aria-autocomplete="list"
-			aria-controls$="[[_prefix('d2l-autocomplete')]]"
-			aria-owns$="[[_prefix('d2l-autocomplete')]]"
+			aria-label$="[[ariaLabel]]"
 			id="[[_prefix('d2l-input-text')]]"
 			maxlength="[[maxLength]]"
 			placeholder$="[[placeholder]]"
@@ -75,6 +73,9 @@ class AutocompleteInputText extends PolymerElement {
 			/**
 			* These properties are used by d2l-input-text
 			*/
+			ariaLabel: {
+				type: String
+			},
 			maxLength: {
 				type: String,
 			},
