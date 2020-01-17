@@ -59,7 +59,8 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 						on-click="_onSuggestionSelected"
 						role="option"
 						tabindex="-1"
-					><span class="d2l-autocomplete-suggestion-highlighted">{{_computeBoldText(item.value, _filter)}}</span>{{_computeText(item.value, _filter)}}</li>
+					>{{_computeText(item.value, _filter, 'prefix')}}<span class="d2l-autocomplete-suggestion-highlighted">{{_computeText(item.value, _filter, 'bolded')}}</span>{{_computeText(item.value, _filter, 'suffix')}}
+					</li>
 				</template>
 			</ul>
 			</d2l-dropdown-content>
@@ -321,12 +322,25 @@ class Autocomplete extends PolymerElement {
 		this._inputHasFocus = true;
 	}
 
-	_computeBoldText(text, filter) {
-		return text.slice(0, filter.length);
-	}
+	_computeText(text, filter, type) {
+		const indexOfFilter = text.toLowerCase().indexOf(filter.toLowerCase());
+		const filterInText = indexOfFilter !== -1;
+		const indexOfFilterEnd = indexOfFilter + filter.length;
 
-	_computeText(text, filter) {
-		return text.slice(filter.length);
+		switch (type) {
+			case 'prefix':
+				return filterInText
+					? text.slice(0, indexOfFilter)
+					: text;
+			case 'bolded':
+				return filterInText
+					? text.slice(indexOfFilter, indexOfFilterEnd)
+					: '';
+			case 'suffix':
+				return filterInText
+					? text.slice(indexOfFilterEnd)
+					: '';
+		}
 	}
 
 	_dropdownIndexChanged(index, oldIndex) {
