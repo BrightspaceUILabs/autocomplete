@@ -25,7 +25,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 			aria-label$="[[ariaLabel]]"
 			id="[[_prefix('d2l-input-text')]]"
 			maxlength="[[maxLength]]"
-			on-change="_handleChange"
+			on-input="_handleInput"
 			placeholder$="[[placeholder]]"
 			role="combobox"
 			slot="input"
@@ -98,7 +98,7 @@ class AutocompleteInputText extends PolymerElement {
 		this._uniqueId = D2L.Id.getUniqueId();
 	}
 
-	_handleChange(e) {
+	_handleInput(e) {
 		this.value = e.target.value;
 	}
 
