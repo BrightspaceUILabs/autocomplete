@@ -17,6 +17,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 			data="[[data]]"
 			id="[[_prefix('d2l-autocomplete')]]"
 			min-length="[[minLength]]"
+			on-d2l-autocomplete-suggestion-selected="_handleSuggestionSelected"
 			remote-source="[[remoteSource]]"
 			select-first="[[selectFirst]]"
 			show-on-focus="[[showOnFocus]]"
@@ -24,11 +25,12 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 			aria-label$="[[ariaLabel]]"
 			id="[[_prefix('d2l-input-text')]]"
 			maxlength="[[maxLength]]"
+			on-input="_handleInput"
 			placeholder$="[[placeholder]]"
 			role="combobox"
 			slot="input"
 			type$="[[type]]"
-			value="{{value}}">
+			value="[[value]]">
 		</d2l-input-text>
 		</d2l-autocomplete>
 	</template>
@@ -94,6 +96,14 @@ class AutocompleteInputText extends PolymerElement {
 	constructor() {
 		super();
 		this._uniqueId = D2L.Id.getUniqueId();
+	}
+
+	_handleInput(e) {
+		this.value = e.target.value;
+	}
+
+	_handleSuggestionSelected(e) {
+		this.value = e.detail.value;
 	}
 
 	_prefix(id) {
