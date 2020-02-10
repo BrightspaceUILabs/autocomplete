@@ -1,10 +1,10 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import 'd2l-inputs/d2l-input-text.js';
-import 'd2l-polymer-behaviors/d2l-id.js';
-import './d2l-autocomplete.js';
+import '@brightspace-ui/core/components/inputs/input-text.js';
+import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
+import './autocomplete.js';
 const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
+$_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete-input-text">
 	<template strip-whitespace="">
 		<style>
 			:host {
@@ -13,11 +13,11 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 
 		</style>
 
-		<d2l-autocomplete
+		<d2l-labs-autocomplete
 			data="[[data]]"
-			id="[[_prefix('d2l-autocomplete')]]"
+			id="[[_prefix('d2l-labs-autocomplete')]]"
 			min-length="[[minLength]]"
-			on-d2l-autocomplete-suggestion-selected="_handleSuggestionSelected"
+			on-d2l-labs-autocomplete-suggestion-selected="_handleSuggestionSelected"
 			remote-source="[[remoteSource]]"
 			select-first="[[selectFirst]]"
 			show-on-focus="[[showOnFocus]]"
@@ -32,20 +32,20 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete-input-text">
 			type$="[[type]]"
 			value="[[value]]">
 		</d2l-input-text>
-		</d2l-autocomplete>
+		</d2l-labs-autocomplete>
 	</template>
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
 /**
- * `<d2l-autocomplete-input-text>`
+ * `<d2l-labs-autocomplete-input-text>`
  * Polymer-based web component for integrating autocomplete with text inputs
  * @customElement
  * @polymer
  * @demo demo/index.hmtl
  */
 class AutocompleteInputText extends PolymerElement {
-	static get is() { return 'd2l-autocomplete-input-text'; }
+	static get is() { return 'd2l-labs-autocomplete-input-text'; }
 	static get properties() {
 		return {
 			/**
@@ -55,7 +55,7 @@ class AutocompleteInputText extends PolymerElement {
 				type: String,
 			},
 			/**
-			* These properties are used by d2l-autocomplete
+			* These properties are used by d2l-labs-autocomplete
 			*/
 			data: {
 				type: Array,
@@ -95,7 +95,7 @@ class AutocompleteInputText extends PolymerElement {
 	}
 	constructor() {
 		super();
-		this._uniqueId = D2L.Id.getUniqueId();
+		this._uniqueId = getUniqueId();
 	}
 
 	_handleInput(e) {
@@ -111,7 +111,7 @@ class AutocompleteInputText extends PolymerElement {
 	}
 
 	setSuggestions(suggestions) {
-		this.shadowRoot.querySelector('#' + this._prefix('d2l-autocomplete')).setSuggestions(suggestions);
+		this.shadowRoot.querySelector('#' + this._prefix('d2l-labs-autocomplete')).setSuggestions(suggestions);
 	}
 
 }

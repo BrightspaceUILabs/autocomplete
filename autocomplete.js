@@ -2,21 +2,22 @@ import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import 'd2l-dropdown/d2l-dropdown-content.js';
 import 'd2l-dropdown/d2l-dropdown.js';
+import '@brightspace-ui/core/components/colors/colors.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
+$_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 	<template strip-whitespace="">
 		<style>
-			#d2l-autocomplete-list {
+			#d2l-labs-autocomplete-list {
 				margin: 0;
 				max-height: 10rem;
 				overflow-y: scroll;
 				padding: 0;
 			}
 
-			.d2l-autocomplete-suggestion {
+			.d2l-labs-autocomplete-suggestion {
 				@apply --d2l-body-compact-text;
 				cursor: pointer;
 				margin-right: 0.1rem;
@@ -28,38 +29,38 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 				white-space: nowrap;
 			}
 
-			.d2l-autocomplete-suggestion-highlighted {
+			.d2l-labs-autocomplete-suggestion-highlighted {
 				font-weight: bold;
 			}
 
-			.d2l-autocomplete-suggestion[aria-selected="true"],
-			.d2l-autocomplete-suggestion:hover  {
+			.d2l-labs-autocomplete-suggestion[aria-selected="true"],
+			.d2l-labs-autocomplete-suggestion:hover  {
 				  background-color: var(--d2l-color-celestine-plus-2);
 			}
 		</style>
-		<d2l-dropdown class="d2l-autocomplete-dropdown-wrapper" no-auto-open="">
+		<d2l-dropdown class="d2l-labs-autocomplete-dropdown-wrapper" no-auto-open="">
 			<div class="d2l-dropdown-opener">
-				<slot id="d2l-autocomplete-input" name="input"></slot>
+				<slot id="d2l-labs-autocomplete-input" name="input"></slot>
 			</div>
 			<d2l-dropdown-content
-				id="d2l-autocomplete-dropdown-content"
+				id="d2l-labs-autocomplete-dropdown-content"
 				max-width="[[_dropdownWidth]]"
 				min-width="[[_dropdownWidth]]"
 				no-auto-focus="[[selectFirst]]"
 				no-padding=""
 				no-pointer=""
 				vertical-offset="5"
-			><ul id="d2l-autocomplete-list" role="listbox">
+			><ul id="d2l-labs-autocomplete-list" role="listbox">
 				<template is="dom-repeat" items="{{_suggestions}}">
 					<li
 						aria-label$="[[item.value]]"
 						aria-selected="false"
-						id="d2l-autocomplete-list-item-[[index]]"
-						class="d2l-autocomplete-suggestion"
+						id="d2l-labs-autocomplete-list-item-[[index]]"
+						class="d2l-labs-autocomplete-suggestion"
 						on-click="_onSuggestionSelected"
 						role="option"
 						tabindex="-1"
-					>{{_computeText(item.value, _filter, 'prefix')}}<span class="d2l-autocomplete-suggestion-highlighted">{{_computeText(item.value, _filter, 'bolded')}}</span>{{_computeText(item.value, _filter, 'suffix')}}
+					>{{_computeText(item.value, _filter, 'prefix')}}<span class="d2l-labs-autocomplete-suggestion-highlighted">{{_computeText(item.value, _filter, 'bolded')}}</span>{{_computeText(item.value, _filter, 'suffix')}}
 					</li>
 				</template>
 			</ul>
@@ -71,14 +72,14 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-autocomplete">
 
 document.head.appendChild($_documentContainer.content);
 /**
- * `<d2l-autocomplete>`
+ * `<d2l-labs-autocomplete>`
  * Polymer-based web component for integrating autocomplete with text inputs
  * @customElement
  * @polymer
  * @demo demo/index.hmtl
  */
 class Autocomplete extends PolymerElement {
-	static get is() { return 'd2l-autocomplete'; }
+	static get is() { return 'd2l-labs-autocomplete'; }
 	static get properties() {
 		return {
 			/**
@@ -206,8 +207,8 @@ class Autocomplete extends PolymerElement {
 		super.connectedCallback();
 
 		// Query slot for the input element
-		this._input = this.$['d2l-autocomplete-input'].assignedNodes() &&
-			this.$['d2l-autocomplete-input'].assignedNodes()[0];
+		this._input = this.$['d2l-labs-autocomplete-input'].assignedNodes() &&
+			this.$['d2l-labs-autocomplete-input'].assignedNodes()[0];
 
 		if (!this._input) {
 			throw new Error('Input not found');
@@ -314,7 +315,7 @@ class Autocomplete extends PolymerElement {
 
 		this._updateSuggestionsVisible();
 		this.dispatchEvent(new CustomEvent(
-			'd2l-autocomplete-suggestion-selected',
+			'd2l-labs-autocomplete-suggestion-selected',
 			{ bubbles: true, composed: true, detail: { value: selection } }
 		));
 
@@ -345,7 +346,7 @@ class Autocomplete extends PolymerElement {
 
 	_dropdownIndexChanged(index, oldIndex) {
 		afterNextRender(this, function() {
-			const suggestionsListChildren = this.$['d2l-autocomplete-list'].children;
+			const suggestionsListChildren = this.$['d2l-labs-autocomplete-list'].children;
 			if (oldIndex >= 0 && oldIndex < suggestionsListChildren.length) {
 				suggestionsListChildren[oldIndex].setAttribute('aria-selected', false);
 			}
@@ -361,12 +362,12 @@ class Autocomplete extends PolymerElement {
 			if (filter.length >= this.minLength) {
 				// Fire event for parent component to handle suggestions
 				this.dispatchEvent(new CustomEvent(
-					'd2l-autocomplete-filter-change',
+					'd2l-labs-autocomplete-filter-change',
 					{ bubbles: true, composed: true, detail: { value: filter } }
 				));
 			} else if (filter.length === 0) {
 				this.dispatchEvent(new CustomEvent(
-					'd2l-autocomplete-filter-change',
+					'd2l-labs-autocomplete-filter-change',
 					{ bubbles: true, composed: true, detail: { value: '' } }
 				));
 			}
@@ -382,8 +383,8 @@ class Autocomplete extends PolymerElement {
 	}
 
 	_suggestionsVisibleChanged() {
-		const suggestionsList = this.$['d2l-autocomplete-list'];
-		this.$['d2l-autocomplete-dropdown-content'].opened
+		const suggestionsList = this.$['d2l-labs-autocomplete-list'];
+		this.$['d2l-labs-autocomplete-dropdown-content'].opened
 			? suggestionsList.setAttribute('role', 'listbox')
 			: suggestionsList.removeAttribute('role');
 	}
@@ -403,7 +404,7 @@ class Autocomplete extends PolymerElement {
 	}
 
 	_scrollList(index) {
-		const suggestionsList = this.$['d2l-autocomplete-list'];
+		const suggestionsList = this.$['d2l-labs-autocomplete-list'];
 		const elem = suggestionsList.children[index];
 		if (elem.offsetTop < suggestionsList.scrollTop) {
 			suggestionsList.scrollTop = (elem.offsetTop);
@@ -416,8 +417,8 @@ class Autocomplete extends PolymerElement {
 		const meetsLength = this._filter.length >= this.minLength;
 		const hasSuggestions = this._suggestions.length > 0;
 		meetsLength && hasSuggestions && this._inputHasFocus
-			? this.$['d2l-autocomplete-dropdown-content'].open(false)
-			: this.$['d2l-autocomplete-dropdown-content'].close();
+			? this.$['d2l-labs-autocomplete-dropdown-content'].open(false)
+			: this.$['d2l-labs-autocomplete-dropdown-content'].close();
 	}
 
 	setSuggestions(suggestions) {
