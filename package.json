@@ -31,7 +31,7 @@
     "polymer-cli": "^1",
     "wct-browser-legacy": "^1"
   },
-  "version": "1.12.2",
+  "version": "2.0.0",
   "main": "autocomplete.js",
   "dependencies": {
     "@brightspace-ui/core": "^1",
