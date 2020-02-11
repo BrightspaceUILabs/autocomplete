@@ -3,131 +3,77 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-		<title>d2l-autocomplete demo</title>
-		<script src="../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+		<link rel="stylesheet" href="/node_modules/@brightspace-ui/core/components/demo/styles.css" type="text/css">
+		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 		<script src="./data.js"></script>
-		<script type="module" src="../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-		<script type="module" src="../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
-		<script type="module" src="../../d2l-typography/d2l-typography.js"></script>
-		<script type="module" src="../d2l-autocomplete.js"></script>
-		<script type="module" src="../d2l-autocomplete-input-text.js"></script>
-		<!-- FIXME(polymer-modulizer):
-		These imperative modules that innerHTML your HTML are
-		a hacky way to be sure that any mixins in included style
-		modules are ready before any elements that reference them are
-		instantiated, otherwise the CSS @apply mixin polyfill won't be
-		able to expand the underlying CSS custom properties.
-		See: https://github.com/Polymer/polymer-modulizer/issues/154
-		-->
-	<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
-			<style is="custom-style" include="demo-pages-shared-styles"></style>
-		</custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
 		<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style include="d2l-typography">
-			<style is="custom-style" include="d2l-typography"></style>
-		</custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
-		<script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<style>
-			html {
-				font-size: 20px;
-			}
+			import '/node_modules/@brightspace-ui/core/components/demo/demo-page.js';
+			import '../autocomplete.js';
+			import '../autocomplete-input-text.js';
+		</script>
+		<style>
 			.autocomplete-input {
 				width: 100%;
 			}
-		</style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+		</style>
 	</head>
-	<body unresolved class="d2l-typography">
-		<script type="module">
-const $_documentContainer = document.createElement('template');
+	<body unresolved>
+		<d2l-demo-page page-title="d2l-labs-autocomplete">
+			<h3>d2l-labs-autocomplete-input-text</h3>
+			<d2l-demo-snippet>
+				<h4 id="demo-input-text-selected">Selection: None</h4>
+				<d2l-labs-autocomplete-input-text id="demo-input-text" class="autocomplete-input" placeholder="Enter a state"></d2l-labs-autocomplete-input-text>
+			</d2l-demo-snippet>
+			<h3>d2l-labs-autocomplete (custom)</h3>
+			<d2l-demo-snippet>
+				<h4 id="demo-custom-selected">Selection: None</h4>
+				<d2l-labs-autocomplete select-first="" id="demo-custom" show-on-focus="">
+					<input slot="input" id="demo-custom-input" class="autocomplete-input" placeholder="Enter a state">
+				</d2l-labs-autocomplete>
+			</d2l-demo-snippet>
+			<h3>d2l-labs-autocomplete (remote source)</h3>
+			<d2l-demo-snippet>
+				<h4 id="demo-remote-source-selected">Selection: None</h4>
+				<d2l-labs-autocomplete remote-source="" id="demo-remote-source" show-on-focus="">
+					<input slot="input" id="demo-remote-source-input" class="autocomplete-input" placeholder="Enter a state">
+				</d2l-labs-autocomplete>
+			</d2l-demo-snippet>
+		</d2l-demo-page>
+		<script>
+		/*global states:true*/
+		const inputTextDemo = document.getElementById('demo-input-text');
+		inputTextDemo.data = states;
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
-			<h3>d2l-autocomplete-input-text</h3>
-			<demo-snippet>
-				<template>
-					<h4 id="demo-input-text-selected">Selection: None</h4>
-					<d2l-autocomplete-input-text id="demo-input-text" class="autocomplete-input" placeholder="Enter a state"></d2l-autocomplete-input-text>
-				</template>
-			</demo-snippet>
-			<h3>d2l-autocomplete (custom)</h3>
-			<demo-snippet>
-				<template>
-					<h4 id="demo-custom-selected">Selection: None</h4>
-					<d2l-autocomplete select-first="" id="demo-custom" show-on-focus="">
-						<input slot="input" id="demo-custom-input" class="autocomplete-input" placeholder="Enter a state">
-					</d2l-autocomplete>
-				</template>
-			</demo-snippet>
-			<h3>d2l-autocomplete (remote source)</h3>
-			<demo-snippet>
-				<template>
-					<h4 id="demo-remote-source-selected">Selection: None</h4>
-					<d2l-autocomplete remote-source="" id="demo-remote-source" show-on-focus="">
-						<input slot="input" id="demo-remote-source-input" class="autocomplete-input" placeholder="Enter a state">
-					</d2l-autocomplete>
-				</template>
-			</demo-snippet>
-		</div>`;
+		const customDemo = document.getElementById('demo-custom');
+		customDemo.data = states;
 
-document.body.appendChild($_documentContainer.content);
-</script>
+		const remoteSourceDemo = document.getElementById('demo-remote-source');
+		remoteSourceDemo.addEventListener('d2l-labs-autocomplete-filter-change', function(event) {
+			const filterFunction = function(item) {
+				return item.value.toLowerCase().indexOf(event.detail.value.toLowerCase()) === 0;
+			};
+
+			const filteredSuggestions = states.filter(filterFunction);
+			// Fake async call
+			setTimeout(function() {
+				remoteSourceDemo.setSuggestions(filteredSuggestions);
+			}, 400);
+		});
+
+		// Event listeners to change heading text on selection
+		const selectionListener = function(id) {
+			return function(event) {
+				document.getElementById(id).innerText = 'Selection: ' + event.detail.value;
+				console.log(event.type, event.detail.value); // eslint-disable-line no-console
+			};
+		};
+
+		inputTextDemo.addEventListener('d2l-labs-autocomplete-suggestion-selected',
+			selectionListener('demo-input-text-selected'));
+		customDemo.addEventListener('d2l-labs-autocomplete-suggestion-selected',
+			selectionListener('demo-custom-selected'));
+		remoteSourceDemo.addEventListener('d2l-labs-autocomplete-suggestion-selected',
+			selectionListener('demo-remote-source-selected'));
+		</script>
 	</body>
-	<script type="module">
-import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-import '@polymer/iron-demo-helpers/demo-snippet.js';
-import 'd2l-typography/d2l-typography.js';
-import '../d2l-autocomplete.js';
-import '../d2l-autocomplete-input-text.js';
-document.body.classList.add('d2l-typography');
-
-/*global states:true*/
-const inputTextDemo = document.getElementById('demo-input-text');
-inputTextDemo.data = states;
-
-const customDemo = document.getElementById('demo-custom');
-customDemo.data = states;
-
-const remoteSourceDemo = document.getElementById('demo-remote-source');
-remoteSourceDemo.addEventListener('d2l-autocomplete-filter-change', function(event) {
-	const filterFunction = function(item) {
-		return item.value.toLowerCase().indexOf(event.detail.value.toLowerCase()) === 0;
-	};
-
-	const filteredSuggestions = states.filter(filterFunction);
-	// Fake async call
-	setTimeout(function() {
-		remoteSourceDemo.setSuggestions(filteredSuggestions);
-	}, 400);
-});
-
-// Event listeners to change heading text on selection
-const selectionListener = function(id) {
-	return function(event) {
-		document.getElementById(id).innerText = 'Selection: ' + event.detail.value;
-		console.log(event.type, event.detail.value); // eslint-disable-line no-console
-	};
-};
-
-inputTextDemo.addEventListener('d2l-autocomplete-suggestion-selected',
-	selectionListener('demo-input-text-selected'));
-customDemo.addEventListener('d2l-autocomplete-suggestion-selected',
-	selectionListener('demo-custom-selected'));
-remoteSourceDemo.addEventListener('d2l-autocomplete-suggestion-selected',
-	selectionListener('demo-remote-source-selected'));
-</script>
 </html>
