@@ -1,7 +1,7 @@
 # d2l-labs-autocomplete
 
 [![NPM version](https://img.shields.io/npm/v/@brightspace-ui-labs/autocomplete.svg)](https://www.npmjs.org/package/@brightspace-ui-labs/autocomplete)
-[![Greenkeeper badge](https://badges.greenkeeper.io/BrightspaceUILabs/autocomplete.svg)](https://greenkeeper.io/)
+[![Dependabot badge](https://flat.badgen.net/dependabot/BrightspaceUILabs/autocomplete?icon=dependabot)](https://app.dependabot.com/)
 [![Build status](https://travis-ci.com/brightspaceUILabs/autocomplete.svg?branch=master)](https://travis-ci.com/brightspaceUILabs/autocomplete)
 
 > Note: this is a ["labs" component](https://github.com/BrightspaceUI/guide/wiki/Component-Tiers). While functional, these tasks are prerequisites to promotion to BrightspaceUI "official" status:
