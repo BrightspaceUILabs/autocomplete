@@ -241,6 +241,75 @@ class Autocomplete extends PolymerElement {
 		this.removeEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
 	}
 
+	filterFn(value, filter) {
+		return value.toLowerCase().indexOf(filter.toLowerCase()) === 0;
+	}
+
+	setSuggestions(suggestions) {
+		this._suggestions = suggestions;
+		this._filter = this._input.value;
+		this._updateSuggestionsVisible();
+	}
+
+	_computeText(text, filter, type) {
+		const indexOfFilter = text.toLowerCase().indexOf(filter.toLowerCase());
+		const filterInText = indexOfFilter !== -1;
+		const indexOfFilterEnd = indexOfFilter + filter.length;
+
+		switch (type) {
+			case 'prefix':
+				return filterInText
+					? text.slice(0, indexOfFilter)
+					: text;
+			case 'bolded':
+				return filterInText
+					? text.slice(indexOfFilter, indexOfFilterEnd)
+					: '';
+			case 'suffix':
+				return filterInText
+					? text.slice(indexOfFilterEnd)
+					: '';
+		}
+	}
+
+	_dropdownIndexChanged(index, oldIndex) {
+		afterNextRender(this, function() {
+			const suggestionsListChildren = this.$['d2l-labs-autocomplete-list'].children;
+			if (oldIndex >= 0 && oldIndex < suggestionsListChildren.length) {
+				suggestionsListChildren[oldIndex].setAttribute('aria-selected', false);
+			}
+			if (index >= 0 && index < suggestionsListChildren.length) {
+				suggestionsListChildren[index].setAttribute('aria-selected', true);
+				suggestionsListChildren[index].focus();
+			}
+		}.bind(this));
+	}
+
+	_filterChanged(filter) {
+		if (this.remoteSource) {
+			if (filter.length >= this.minLength) {
+				// Fire event for parent component to handle suggestions
+				this.dispatchEvent(new CustomEvent(
+					'd2l-labs-autocomplete-filter-change',
+					{ bubbles: true, composed: true, detail: { value: filter } }
+				));
+			} else if (filter.length === 0) {
+				this.dispatchEvent(new CustomEvent(
+					'd2l-labs-autocomplete-filter-change',
+					{ bubbles: true, composed: true, detail: { value: '' } }
+				));
+			}
+		} else {
+			this._suggestions = filter.length === 0 || filter.length < this.minLength
+				? []
+				: this.data.filter(function(item) {
+					return this.filterFn(item.value, filter);
+				}.bind(this));
+			this._filter = filter;
+			this._updateSuggestionsVisible();
+		}
+	}
+
 	_onBlur(event) {
 		if (event.relatedTarget !== this) {
 			this._dropdownIndex = -1;
@@ -323,75 +392,14 @@ class Autocomplete extends PolymerElement {
 		this._inputHasFocus = true;
 	}
 
-	_computeText(text, filter, type) {
-		const indexOfFilter = text.toLowerCase().indexOf(filter.toLowerCase());
-		const filterInText = indexOfFilter !== -1;
-		const indexOfFilterEnd = indexOfFilter + filter.length;
-
-		switch (type) {
-			case 'prefix':
-				return filterInText
-					? text.slice(0, indexOfFilter)
-					: text;
-			case 'bolded':
-				return filterInText
-					? text.slice(indexOfFilter, indexOfFilterEnd)
-					: '';
-			case 'suffix':
-				return filterInText
-					? text.slice(indexOfFilterEnd)
-					: '';
-		}
-	}
-
-	_dropdownIndexChanged(index, oldIndex) {
-		afterNextRender(this, function() {
-			const suggestionsListChildren = this.$['d2l-labs-autocomplete-list'].children;
-			if (oldIndex >= 0 && oldIndex < suggestionsListChildren.length) {
-				suggestionsListChildren[oldIndex].setAttribute('aria-selected', false);
-			}
-			if (index >= 0 && index < suggestionsListChildren.length) {
-				suggestionsListChildren[index].setAttribute('aria-selected', true);
-				suggestionsListChildren[index].focus();
-			}
-		}.bind(this));
-	}
-
-	_filterChanged(filter) {
-		if (this.remoteSource) {
-			if (filter.length >= this.minLength) {
-				// Fire event for parent component to handle suggestions
-				this.dispatchEvent(new CustomEvent(
-					'd2l-labs-autocomplete-filter-change',
-					{ bubbles: true, composed: true, detail: { value: filter } }
-				));
-			} else if (filter.length === 0) {
-				this.dispatchEvent(new CustomEvent(
-					'd2l-labs-autocomplete-filter-change',
-					{ bubbles: true, composed: true, detail: { value: '' } }
-				));
-			}
-		} else {
-			this._suggestions = filter.length === 0 || filter.length < this.minLength
-				? []
-				: this.data.filter(function(item) {
-					return this.filterFn(item.value, filter);
-				}.bind(this));
-			this._filter = filter;
-			this._updateSuggestionsVisible();
-		}
-	}
-
-	_suggestionsVisibleChanged() {
+	_scrollList(index) {
 		const suggestionsList = this.$['d2l-labs-autocomplete-list'];
-		this.$['d2l-labs-autocomplete-dropdown-content'].opened
-			? suggestionsList.setAttribute('role', 'listbox')
-			: suggestionsList.removeAttribute('role');
-	}
-
-	_suggestionsChanged(updatedSuggestions) {
-		this._selectDropdownIndex(this.selectFirst ? 0 : -1);
-		return updatedSuggestions;
+		const elem = suggestionsList.children[index];
+		if (elem.offsetTop < suggestionsList.scrollTop) {
+			suggestionsList.scrollTop = (elem.offsetTop);
+		} else if (elem.offsetHeight + elem.offsetTop > suggestionsList.offsetHeight + suggestionsList.scrollTop) {
+			suggestionsList.scrollTop = (elem.offsetTop + elem.offsetHeight - suggestionsList.offsetHeight);
+		}
 	}
 
 	_selectDropdownIndex(index) {
@@ -403,14 +411,16 @@ class Autocomplete extends PolymerElement {
 		}
 	}
 
-	_scrollList(index) {
+	_suggestionsChanged(updatedSuggestions) {
+		this._selectDropdownIndex(this.selectFirst ? 0 : -1);
+		return updatedSuggestions;
+	}
+
+	_suggestionsVisibleChanged() {
 		const suggestionsList = this.$['d2l-labs-autocomplete-list'];
-		const elem = suggestionsList.children[index];
-		if (elem.offsetTop < suggestionsList.scrollTop) {
-			suggestionsList.scrollTop = (elem.offsetTop);
-		} else if (elem.offsetHeight + elem.offsetTop > suggestionsList.offsetHeight + suggestionsList.scrollTop) {
-			suggestionsList.scrollTop = (elem.offsetTop + elem.offsetHeight - suggestionsList.offsetHeight);
-		}
+		this.$['d2l-labs-autocomplete-dropdown-content'].opened
+			? suggestionsList.setAttribute('role', 'listbox')
+			: suggestionsList.removeAttribute('role');
 	}
 
 	_updateSuggestionsVisible() {
@@ -419,16 +429,6 @@ class Autocomplete extends PolymerElement {
 		meetsLength && hasSuggestions && this._inputHasFocus
 			? this.$['d2l-labs-autocomplete-dropdown-content'].open(false)
 			: this.$['d2l-labs-autocomplete-dropdown-content'].close();
-	}
-
-	setSuggestions(suggestions) {
-		this._suggestions = suggestions;
-		this._filter = this._input.value;
-		this._updateSuggestionsVisible();
-	}
-
-	filterFn(value, filter) {
-		return value.toLowerCase().indexOf(filter.toLowerCase()) === 0;
 	}
 
 }

@@ -98,6 +98,10 @@ class AutocompleteInputText extends PolymerElement {
 		this._uniqueId = getUniqueId();
 	}
 
+	setSuggestions(suggestions) {
+		this.shadowRoot.querySelector('#' + this._prefix('d2l-labs-autocomplete')).setSuggestions(suggestions);
+	}
+
 	_handleInput(e) {
 		this.value = e.target.value;
 	}
@@ -108,10 +112,6 @@ class AutocompleteInputText extends PolymerElement {
 
 	_prefix(id) {
 		return this._uniqueId + '-' + id;
-	}
-
-	setSuggestions(suggestions) {
-		this.shadowRoot.querySelector('#' + this._prefix('d2l-labs-autocomplete')).setSuggestions(suggestions);
 	}
 
 }
