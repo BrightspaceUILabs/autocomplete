@@ -25,6 +25,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete-input-tex
 			aria-label$="[[ariaLabel]]"
 			id="[[_prefix('d2l-input-text')]]"
 			maxlength="[[maxLength]]"
+			novalidate
 			on-input="_handleInput"
 			placeholder$="[[placeholder]]"
 			role="combobox"
