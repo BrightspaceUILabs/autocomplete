@@ -340,7 +340,7 @@ class Autocomplete extends PolymerElement {
 	}
 
 	_onKeyDown(event) {
-		const { UP, DOWN, ENTER, ESCAPE, HOME, END} = this._keyCodes;
+		const { UP, DOWN, ENTER, ESCAPE, HOME, END } = this._keyCodes;
 		const { keyCode } = event;
 
 		if (keyCode === UP) {
