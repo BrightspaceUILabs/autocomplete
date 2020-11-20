@@ -31,7 +31,6 @@
     "eslint-config-brightspace": "^0.11.0",
     "eslint-plugin-html": "^6",
     "eslint-plugin-sort-class-members": "^1",
-    "frau-ci": "^1",
     "polymer-cli": "^1",
     "wct-browser-legacy": "^1"
   },
@@ -39,7 +38,6 @@
   "main": "autocomplete.js",
   "dependencies": {
     "@brightspace-ui/core": "^1",
-    "@polymer/polymer": "^3",
-    "d2l-dropdown": "BrightspaceUI/dropdown#semver:^7"
+    "@polymer/polymer": "^3"
   }
 }
