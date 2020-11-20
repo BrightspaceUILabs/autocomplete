@@ -1,8 +1,8 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-import 'd2l-dropdown/d2l-dropdown-content.js';
-import 'd2l-dropdown/d2l-dropdown.js';
 import '@brightspace-ui/core/components/colors/colors.js';
+import '@brightspace-ui/core/components/dropdown/dropdown-content.js';
+import '@brightspace-ui/core/components/dropdown/dropdown.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 const $_documentContainer = document.createElement('template');
