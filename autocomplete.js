@@ -3,6 +3,7 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-content.js';
 import '@brightspace-ui/core/components/dropdown/dropdown.js';
+import '@polymer/polymer/lib/elements/dom-repeat.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 const $_documentContainer = document.createElement('template');
@@ -51,7 +52,8 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 				no-pointer=""
 				vertical-offset="5"
 			><ul id="d2l-labs-autocomplete-list" role="listbox">
-				<template is="dom-repeat" items="{{_suggestions}}">
+				<dom-repeat items="{{_suggestions}}">
+					<template>
 					<li
 						aria-label$="[[item.value]]"
 						aria-selected="false"
@@ -62,7 +64,8 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 						tabindex="-1"
 					>{{_computeText(item.value, _filter, 'prefix')}}<span class="d2l-labs-autocomplete-suggestion-highlighted">{{_computeText(item.value, _filter, 'bolded')}}</span>{{_computeText(item.value, _filter, 'suffix')}}
 					</li>
-				</template>
+					</template>
+				</dom-repeat>
 			</ul>
 			</d2l-dropdown-content>
 		</d2l-dropdown>
