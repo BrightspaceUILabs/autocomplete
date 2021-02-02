@@ -14,9 +14,12 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete-input-tex
 		</style>
 
 		<d2l-labs-autocomplete
+			auto-size-dropdown="[[autoSizeDropdown]]"
 			data="[[data]]"
+			dropdown-label="[[dropdownLabel]]"
 			id="[[_prefix('d2l-labs-autocomplete')]]"
 			min-length="[[minLength]]"
+			min-width="[[minWidth]]"
 			on-d2l-labs-autocomplete-suggestion-selected="_handleSuggestionSelected"
 			remote-source="[[remoteSource]]"
 			select-first="[[selectFirst]]"
@@ -61,8 +64,18 @@ class AutocompleteInputText extends PolymerElement {
 			data: {
 				type: Array,
 			},
+			dropdownLabel: {
+				type: String,
+				value: null,
+			},
 			minLength: {
 				type: String,
+			},
+			maxWidth: {
+				type: Number,
+			},
+			minWidth: {
+				type: Number,
 			},
 			remoteSource: {
 				type: Boolean
