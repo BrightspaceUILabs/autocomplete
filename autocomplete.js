@@ -50,8 +50,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 			</div>
 			<d2l-dropdown-content
 				id="d2l-labs-autocomplete-dropdown-content"
-				max-width="[[maxWidth]]"
-				min-width="[[minWidth]]"
+				min-width="[[_minWidth]]"
 				no-auto-focus="[[selectFirst]]"
 				no-padding=""
 				no-pointer=""
@@ -143,6 +142,12 @@ class Autocomplete extends PolymerElement {
 				value: { UP: 38, DOWN: 40, ENTER: 13, ESCAPE: 27, HOME: 36, END: 35 }
 			},
 			/**
+			 * Used to set min width of the dropdown
+			 */
+			_minWidth: {
+				type: Number,
+			},
+			/**
 			* List of autocomplete suggestions
 			*/
 			_suggestions: {
@@ -176,18 +181,6 @@ class Autocomplete extends PolymerElement {
 			minLength: {
 				type: Number,
 				value: 1,
-			},
-			/**
-			* Maximum width of the dropdown
-			*/
-			maxWidth: {
-				type: Number
-			},
-			/**
-			* Minimum width of the dropdown
-			*/
-			minWidth: {
-				type: Number
 			},
 			/**
 			* Indicates whether the data is from a remote source. Suggestions should be
@@ -343,6 +336,7 @@ class Autocomplete extends PolymerElement {
 
 	_onFocus(event) {
 		this._inputHasFocus = true;
+		this._minWidth = this._input.offsetWidth;
 
 		if (this.showOnFocus && event.relatedTarget !== this) {
 			this._updateSuggestionsVisible();
