@@ -14,7 +14,6 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete-input-tex
 		</style>
 
 		<d2l-labs-autocomplete
-			auto-size-dropdown="[[autoSizeDropdown]]"
 			data="[[data]]"
 			dropdown-label="[[dropdownLabel]]"
 			id="[[_prefix('d2l-labs-autocomplete')]]"
