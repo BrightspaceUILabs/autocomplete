@@ -18,6 +18,11 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 				padding: 0;
 			}
 
+			#d2l-labs-autocomplete-dropdown-label {
+				font-size: 0.7rem;
+				padding: 0.4rem 0.7rem;
+			}
+
 			.d2l-labs-autocomplete-suggestion {
 				@apply --d2l-body-compact-text;
 				cursor: pointer;
@@ -45,28 +50,30 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 			</div>
 			<d2l-dropdown-content
 				id="d2l-labs-autocomplete-dropdown-content"
-				max-width="[[_dropdownWidth]]"
-				min-width="[[_dropdownWidth]]"
+				min-width="[[_minWidth]]"
 				no-auto-focus="[[selectFirst]]"
 				no-padding=""
 				no-pointer=""
 				vertical-offset="5"
-			><ul id="d2l-labs-autocomplete-list" role="listbox">
-				<dom-repeat items="{{_suggestions}}">
-					<template>
-					<li
-						aria-label$="[[item.value]]"
-						aria-selected="false"
-						id="d2l-labs-autocomplete-list-item-[[index]]"
-						class="d2l-labs-autocomplete-suggestion"
-						on-click="_onSuggestionSelected"
-						role="option"
-						tabindex="-1"
-					>{{_computeText(item.value, _filter, 'prefix')}}<span class="d2l-labs-autocomplete-suggestion-highlighted">{{_computeText(item.value, _filter, 'bolded')}}</span>{{_computeText(item.value, _filter, 'suffix')}}
-					</li>
-					</template>
-				</dom-repeat>
-			</ul>
+				align="start"
+			>
+				<div hidden$="[[!dropdownLabel]]" id="d2l-labs-autocomplete-dropdown-label">[[dropdownLabel]]</div>
+				<ul id="d2l-labs-autocomplete-list" role="listbox">
+					<dom-repeat items="{{_suggestions}}">
+						<template>
+						<li
+							aria-label$="[[item.value]]"
+							aria-selected="false"
+							id="d2l-labs-autocomplete-list-item-[[index]]"
+							class="d2l-labs-autocomplete-suggestion"
+							on-click="_onSuggestionSelected"
+							role="option"
+							tabindex="-1"
+						>{{_computeText(item.value, _filter, 'prefix')}}<span class="d2l-labs-autocomplete-suggestion-highlighted">{{_computeText(item.value, _filter, 'bolded')}}</span>{{_computeText(item.value, _filter, 'suffix')}}
+						</li>
+						</template>
+					</dom-repeat>
+				</ul>
 			</d2l-dropdown-content>
 		</d2l-dropdown>
 	</template>
@@ -115,12 +122,6 @@ class Autocomplete extends PolymerElement {
 				observer: '_dropdownIndexChanged'
 			},
 			/**
-			* Used to set the width of the dropdown
-			*/
-			_dropdownWidth: {
-				type: Number,
-			},
-			/**
 			* The input element associated with the autocomplete
 			*/
 			_input: {
@@ -141,6 +142,12 @@ class Autocomplete extends PolymerElement {
 				value: { UP: 38, DOWN: 40, ENTER: 13, ESCAPE: 27, HOME: 36, END: 35 }
 			},
 			/**
+			 * Used to set min width of the dropdown
+			 */
+			_minWidth: {
+				type: Number,
+			},
+			/**
 			* List of autocomplete suggestions
 			*/
 			_suggestions: {
@@ -154,6 +161,13 @@ class Autocomplete extends PolymerElement {
 			data: {
 				type: Array,
 				value: [],
+			},
+			/**
+			 * Label to display at the top of the dropdown
+			 */
+			dropdownLabel: {
+				type: String,
+				value: null,
 			},
 			/**
 			* Function used to filter `data`
@@ -322,7 +336,8 @@ class Autocomplete extends PolymerElement {
 
 	_onFocus(event) {
 		this._inputHasFocus = true;
-		this._dropdownWidth = this._input.offsetWidth;
+		this._minWidth = this._input.offsetWidth;
+
 		if (this.showOnFocus && event.relatedTarget !== this) {
 			this._updateSuggestionsVisible();
 			this._selectDropdownIndex(this.selectFirst ? 0 : -1);
