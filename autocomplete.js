@@ -14,7 +14,6 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 			#d2l-labs-autocomplete-list {
 				margin: 0;
 				max-height: 10rem;
-				overflow-y: scroll;
 				padding: 0;
 			}
 
