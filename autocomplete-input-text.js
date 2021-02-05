@@ -45,7 +45,7 @@ document.head.appendChild($_documentContainer.content);
  * Polymer-based web component for integrating autocomplete with text inputs
  * @customElement
  * @polymer
- * @demo demo/index.hmtl
+ * @demo demo/index.html
  */
 class AutocompleteInputText extends PolymerElement {
 	static get is() { return 'd2l-labs-autocomplete-input-text'; }
