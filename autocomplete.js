@@ -48,7 +48,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete">
 			</div>
 			<d2l-dropdown-content
 				id="d2l-labs-autocomplete-dropdown-content"
-				max-height="[[_maxHeight]]"
+				max-height="[[maxHeight]]"
 				min-width="[[_minWidth]]"
 				no-auto-focus="[[selectFirst]]"
 				no-padding=""
@@ -141,12 +141,6 @@ class Autocomplete extends PolymerElement {
 				value: { UP: 38, DOWN: 40, ENTER: 13, ESCAPE: 27, HOME: 36, END: 35 }
 			},
 			/**
-			 * Used to set max height of the dropdown
-			 */
-			_maxHeight: {
-				type: Number,
-			},
-			/**
 			 * Used to set min width of the dropdown
 			 */
 			_minWidth: {
@@ -179,6 +173,12 @@ class Autocomplete extends PolymerElement {
 			*/
 			filterFn: {
 				type: Function,
+			},
+			/**
+			* Maximum height of the dropdown
+			*/
+			maxHeight: {
+				type: Number
 			},
 			/**
 			* Minimum required length of query before searching
