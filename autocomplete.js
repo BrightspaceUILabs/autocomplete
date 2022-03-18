@@ -237,20 +237,18 @@ class Autocomplete extends PolymerElement {
 		}
 		this._input.setAttribute('aria-autocomplete', 'list');
 
-		afterNextRender(this, function() {
-			this._boundListeners = {
-				_onBlur: this._onBlur.bind(this),
-				_onFocus: this._onFocus.bind(this),
-				_onInput: this._onInput.bind(this),
-			};
+		this._boundListeners = {
+			_onBlur: this._onBlur.bind(this),
+			_onFocus: this._onFocus.bind(this),
+			_onInput: this._onInput.bind(this),
+		};
 
-			this._input.addEventListener('blur', this._boundListeners._onBlur);
-			this._input.addEventListener('focus', this._boundListeners._onFocus);
-			this._input.addEventListener('input', this._boundListeners._onInput);
-			this.addEventListener('keydown', this._onKeyDown);
-			this.addEventListener('d2l-dropdown-close', this._suggestionsVisibleChanged);
-			this.addEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
-		}.bind(this));
+		this._input.addEventListener('blur', this._boundListeners._onBlur);
+		this._input.addEventListener('focus', this._boundListeners._onFocus);
+		this._input.addEventListener('input', this._boundListeners._onInput);
+		this.addEventListener('keydown', this._onKeyDown);
+		this.addEventListener('d2l-dropdown-close', this._suggestionsVisibleChanged);
+		this.addEventListener('d2l-dropdown-open', this._suggestionsVisibleChanged);
 	}
 
 	disconnectedCallback() {
@@ -350,6 +348,7 @@ class Autocomplete extends PolymerElement {
 	}
 
 	_onInput(event) {
+
 		const handler = function(filter) {
 			return function() {
 				this._filterChanged(filter);

@@ -85,34 +85,31 @@ autocomplete.addEventListener('d2l-labs-autocomplete-filter-change', event => {
 
 After cloning the repo, run `npm install` to install dependencies.
 
-If you don't have it already, install the [Polymer CLI](https://www.polymer-project.org/3.0/docs/tools/polymer-cli) globally:
-
-```shell
-npm install -g polymer-cli
-```
-
-To start a [local web server](https://www.polymer-project.org/3.0/docs/tools/polymer-cli-commands#serve) that hosts the demo page and tests:
-
-```shell
-polymer serve
-```
-
-To lint ([eslint](http://eslint.org/) and [Polymer lint](https://www.polymer-project.org/3.0/docs/tools/polymer-cli-commands#lint)):
+### Linting
 
 ```shell
 npm run lint
 ```
 
-To run unit tests locally using [Polymer test](https://www.polymer-project.org/3.0/docs/tools/polymer-cli-commands#tests):
+### Testing
 
 ```shell
-npm run test:polymer:local
+# lint & run headless unit tests
+npm test
+
+# unit tests only
+npm run test:headless
+
+# debug or run a subset of local unit tests
+npm run test:headless:watch
 ```
 
-To lint AND run local unit tests:
+### Running the demos
+
+To start a [@web/dev-server](https://modern-web.dev/docs/dev-server/overview/) that hosts the demo page and tests:
 
 ```shell
-npm test
+npm start
 ```
 
 ## Versioning & Releasing
