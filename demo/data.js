@@ -1,5 +1,4 @@
-/* exported states */
-const states = [ // eslint-disable-line
+export const states = [
 	{ value: 'Alabama' },
 	{ value: 'Alaska' },
 	{ value: 'American Samoa' },
@@ -60,4 +59,3 @@ const states = [ // eslint-disable-line
 	{ value: 'Wisconsin' },
 	{ value: 'Wyoming' },
 ];
-
