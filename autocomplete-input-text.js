@@ -1,7 +1,7 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';
-import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import './autocomplete.js';
+import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete-input-text">
@@ -109,7 +109,7 @@ class AutocompleteInputText extends PolymerElement {
 	}
 
 	setSuggestions(suggestions) {
-		this.shadowRoot.querySelector('#' + this._prefix('d2l-labs-autocomplete')).setSuggestions(suggestions);
+		this.shadowRoot.querySelector(`#${this._prefix('d2l-labs-autocomplete')}`).setSuggestions(suggestions);
 	}
 
 	_handleInput(e) {
@@ -121,7 +121,7 @@ class AutocompleteInputText extends PolymerElement {
 	}
 
 	_prefix(id) {
-		return this._uniqueId + '-' + id;
+		return `${this._uniqueId}-${id}`;
 	}
 
 }

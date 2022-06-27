@@ -1,10 +1,10 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-content.js';
 import '@brightspace-ui/core/components/dropdown/dropdown.js';
 import '@polymer/polymer/lib/elements/dom-repeat.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 const $_documentContainer = document.createElement('template');
 
@@ -221,10 +221,6 @@ class Autocomplete extends PolymerElement {
 		};
 	}
 
-	constructor() {
-		super();
-	}
-
 	connectedCallback() {
 		super.connectedCallback();
 
@@ -293,7 +289,7 @@ class Autocomplete extends PolymerElement {
 	}
 
 	_dropdownIndexChanged(index, oldIndex) {
-		afterNextRender(this, function() {
+		afterNextRender(this, () => {
 			const suggestionsListChildren = this.$['d2l-labs-autocomplete-list'].children;
 			if (oldIndex >= 0 && oldIndex < suggestionsListChildren.length) {
 				suggestionsListChildren[oldIndex].setAttribute('aria-selected', false);
@@ -302,7 +298,7 @@ class Autocomplete extends PolymerElement {
 				suggestionsListChildren[index].setAttribute('aria-selected', true);
 				suggestionsListChildren[index].focus();
 			}
-		}.bind(this));
+		});
 	}
 
 	_filterChanged(filter) {
@@ -322,9 +318,9 @@ class Autocomplete extends PolymerElement {
 		} else {
 			this._suggestions = filter.length === 0 || filter.length < this.minLength
 				? []
-				: this.data.filter(function(item) {
+				: this.data.filter((item) => {
 					return this.filterFn(item.value, filter);
-				}.bind(this));
+				});
 			this._filter = filter;
 			this._updateSuggestionsVisible();
 		}
