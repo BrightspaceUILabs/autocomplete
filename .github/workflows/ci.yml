@@ -19,4 +19,4 @@ jobs:
       - name: Lint (CSS)
         run: npm run lint:style
       - name: Unit Tests (cross-browser)
-        run: npx web-test-runner --files ./test/**/*.test.js --node-resolve --playwright --browsers chromium firefox webkit
+        run: npx web-test-runner --files "./test/**/*.test.js" --node-resolve --playwright --browsers chromium firefox webkit
