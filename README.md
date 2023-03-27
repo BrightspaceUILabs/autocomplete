@@ -1,4 +1,4 @@
-# d2l-labs-autocomplete
+# @brightspace-ui-labs/autocomplete
 
 [![NPM version](https://img.shields.io/npm/v/@brightspace-ui-labs/autocomplete.svg)](https://www.npmjs.org/package/@brightspace-ui-labs/autocomplete)
 
