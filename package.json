@@ -31,7 +31,7 @@
     "@open-wc/testing": "^3",
     "@polymer/iron-test-helpers": "^3",
     "@web/dev-server": "^0.4",
-    "@web/test-runner": "^0.17",
+    "@web/test-runner": "^0.18",
     "eslint": "^8",
     "eslint-config-brightspace": "^0.25",
     "eslint-plugin-html": "^7",
