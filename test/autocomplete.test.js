@@ -1,7 +1,7 @@
 import '../autocomplete.js';
 import '../autocomplete-input-text.js';
 import '@polymer/iron-test-helpers/mock-interactions.js';
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent } from '@brightspace-ui/testing';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { flush as flush$0 } from '@polymer/polymer/lib/utils/flush.js';
 
