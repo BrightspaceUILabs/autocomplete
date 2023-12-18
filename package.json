@@ -30,7 +30,7 @@
     "@web/dev-server": "^0.4",
     "eslint": "^8",
     "eslint-config-brightspace": "^0.25",
-    "stylelint": "^15"
+    "stylelint": "^16"
   },
   "version": "4.1.0",
   "main": "autocomplete.js",
