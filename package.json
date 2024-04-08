@@ -28,7 +28,7 @@
     "@brightspace-ui/testing": "^1",
     "@polymer/iron-test-helpers": "^3",
     "@web/dev-server": "^0.4",
-    "eslint": "^8",
+    "eslint": "^9",
     "eslint-config-brightspace": "^0.25",
     "stylelint": "^15"
   },
