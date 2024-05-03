@@ -35,7 +35,7 @@
   "version": "4.1.0",
   "main": "autocomplete.js",
   "dependencies": {
-    "@brightspace-ui/core": "^2",
+    "@brightspace-ui/core": "^3",
     "@polymer/polymer": "^3"
   }
 }
