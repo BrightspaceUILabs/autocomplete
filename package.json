@@ -32,7 +32,7 @@
     "eslint-config-brightspace": "^0.25",
     "stylelint": "^15"
   },
-  "version": "4.1.0",
+  "version": "5.0.0",
   "main": "autocomplete.js",
   "dependencies": {
     "@brightspace-ui/core": "^3",
