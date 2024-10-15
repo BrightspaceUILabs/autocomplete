@@ -1,123 +1,84 @@
 import '@brightspace-ui/core/components/inputs/input-text.js';
+import '@brightspace-ui/core/components/dropdown/dropdown-content.js';
+import '@brightspace-ui/core/components/dropdown/dropdown.js';
 import './autocomplete.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-const $_documentContainer = document.createElement('template');
+import { LitElement, css, html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
-$_documentContainer.innerHTML = `<dom-module id="d2l-labs-autocomplete-input-text">
-	<template strip-whitespace="">
-		<style>
-			:host {
-				display: flex;
-			}
 
-		</style>
-
-		<d2l-labs-autocomplete
-			data="[[data]]"
-			dropdown-label="[[dropdownLabel]]"
-			id="[[_prefix('d2l-labs-autocomplete')]]"
-			max-height="[[maxHeight]]"
-			min-length="[[minLength]]"
-			on-d2l-labs-autocomplete-suggestion-selected="_handleSuggestionSelected"
-			remote-source="[[remoteSource]]"
-			select-first="[[selectFirst]]"
-			show-on-focus="[[showOnFocus]]"
-		><d2l-input-text
-			aria-label$="[[ariaLabel]]"
-			id="[[_prefix('d2l-input-text')]]"
-			maxlength="[[maxLength]]"
-			novalidate
-			on-input="_handleInput"
-			placeholder$="[[placeholder]]"
-			role="combobox"
-			slot="input"
-			type$="[[type]]"
-			value="[[value]]">
-		</d2l-input-text>
-		</d2l-labs-autocomplete>
-	</template>
-</dom-module>`;
-
-document.head.appendChild($_documentContainer.content);
-/**
- * `<d2l-labs-autocomplete-input-text>`
- * Polymer-based web component for integrating autocomplete with text inputs
- * @customElement
- * @polymer
- * @demo demo/index.html
- */
-class AutocompleteInputText extends PolymerElement {
+class AutocompleteInputText extends LitElement {
 	static get is() { return 'd2l-labs-autocomplete-input-text'; }
 	static get properties() {
 		return {
 			/**
 			* Unique Id for prefixing the autocomplete and input-text
 			*/
-			_uniqueId: {
-				type: String,
-			},
+			_uniqueId: { type: String },
 			/**
 			* These properties are used by d2l-labs-autocomplete
 			*/
-			data: {
-				type: Array,
-			},
-			dropdownLabel: {
-				type: String,
-				value: null,
-			},
-			maxHeight: {
-				type: Number,
-			},
-			minLength: {
-				type: String,
-			},
-			remoteSource: {
-				type: Boolean
-			},
-			selectFirst: {
-				type: Boolean,
-			},
-			showOnFocus: {
-				type: Boolean,
-			},
+			data: { type:Object },
+			dropdownLabel: { type: String, attribute: 'dropdown-label' },
+			maxLength: { type: String, attribute: 'max-length' },
+			minLength: { type: String, attribute: 'min-length' },
+			remoteSource: { type: Boolean, attribute: 'remote-resource' },
+			showOnFocus: { type: Boolean, attribute: "show-on-focus" },
+			_filter: { type: String },
+			_dropdownIndex: { type: Number },
 			/**
 			* These properties are used by d2l-input-text
 			*/
-			ariaLabel: {
-				type: String
-			},
-			maxLength: {
-				type: String,
-			},
-			placeholder: {
-				type: String,
-			},
-			type: {
-				type: String,
-				value: 'text'
-			},
-			value: {
-				type: String,
-			}
+			ariaLabel: { type: String, attribute: 'aria-label' },
+			placeholder: { type: String },
 		};
 	}
+	static get styles() {
+		return css`
+			:host {
+				display: flex;
+			}
+		`
+	}
+
+	get value() {
+		this.shadowRoot.querySelector('d2l-labs-autocomplete').value
+	}
+
+
 	constructor() {
 		super();
+		this.dropdownLabel = null;
+		this.data = []
 		this._uniqueId = getUniqueId();
+		this._filter = '';
+		this._dropdownIndex = -1;
+	}
+
+	render() {
+		return html`<d2l-labs-autocomplete
+			dropdown-label="${this.dropdownLabel}"
+			id="${this._prefix('d2l-labs-autocomplete')}"
+			min-length="${this.minLength}"
+			.data="${this.data}"
+			@d2l-labs-autocomplete-suggestion-selected=${this._handleSuggestionSelected}
+			?remote-source=${this.remoteSource}
+			?show-on-focus=${this.showOnFocus}>
+			<d2l-input-text
+				aria-label="${this.ariaLabel}"
+				id="${this._prefix('d2l-input-text')}"
+				maxlength="${ifDefined(this.maxLength)}"
+				novalidate
+				autocomplete="list"
+				placeholder="${ifDefined(this.placeholder)}"
+				role="combobox"
+				slot="input">
+			</d2l-input-text>
+		</d2l-labs-autocomplete>`
 	}
 
 	setSuggestions(suggestions) {
 		this.shadowRoot.querySelector(`#${this._prefix('d2l-labs-autocomplete')}`).setSuggestions(suggestions);
-	}
-
-	_handleInput(e) {
-		this.value = e.target.value;
-	}
-
-	_handleSuggestionSelected(e) {
-		this.value = e.detail.value;
 	}
 
 	_prefix(id) {
