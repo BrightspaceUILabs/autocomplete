@@ -10,8 +10,7 @@
     "access": "public"
   },
   "files": [
-    "autocomplete-input-text.js",
-    "autocomplete.js"
+    "autocomplete-input-text.js"
   ],
   "scripts": {
     "lint": "npm run lint:eslint && npm run lint:style",
@@ -26,7 +25,6 @@
   "devDependencies": {
     "@brightspace-ui/stylelint-config": "^0.8",
     "@brightspace-ui/testing": "^1",
-    "@polymer/iron-test-helpers": "^3",
     "@web/dev-server": "^0.4",
     "eslint": "^8",
     "eslint-config-brightspace": "^0.25",
@@ -36,7 +34,6 @@
   "main": "autocomplete.js",
   "dependencies": {
     "@brightspace-ui/core": "^3",
-    "@polymer/polymer": "^3",
     "lit": "^3.2.1"
   }
 }
