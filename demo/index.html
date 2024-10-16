@@ -4,7 +4,6 @@
 		<link rel="stylesheet" href="/node_modules/@brightspace-ui/core/components/demo/styles.css" type="text/css">
 		<script type="module">
 			import '@brightspace-ui/core/components/demo/demo-page.js';
-			import '../autocomplete.js';
 			import '../autocomplete-input-text.js';
 		</script>
 		<title>d2l-labs-autocomplete</title>
@@ -24,29 +23,16 @@
 				<d2l-labs-autocomplete-input-text id="demo-input-text" class="autocomplete-input" placeholder="Enter a state"></d2l-labs-autocomplete-input-text>
 			</d2l-demo-snippet>
 
-			<h2>d2l-labs-autocomplete (custom)</h2>
-			<d2l-demo-snippet>
-				<h3 id="demo-custom-selected">Selection: None</h3>
-				<d2l-labs-autocomplete select-first="" id="demo-custom" show-on-focus="">
-					<input slot="input" id="demo-custom-input" class="autocomplete-input" placeholder="Enter a state">
-				</d2l-labs-autocomplete>
-			</d2l-demo-snippet>
-
 			<h2>d2l-labs-autocomplete (remote source)</h2>
 			<d2l-demo-snippet>
 				<h3 id="demo-remote-source-selected">Selection: None</h3>
-				<d2l-labs-autocomplete remote-source="" id="demo-remote-source" show-on-focus="">
-					<input slot="input" id="demo-remote-source-input" class="autocomplete-input" placeholder="Enter a state">
-				</d2l-labs-autocomplete>
+				<d2l-labs-autocomplete-input-text remote-source id="demo-remote-source" show-on-focus></d2l-labs-autocomplete-input-text>
 			</d2l-demo-snippet>
 		</d2l-demo-page>
 		<script type="module">
 		import { states } from './data.js';
 		const inputTextDemo = document.getElementById('demo-input-text');
 		inputTextDemo.data = states;
-
-		const customDemo = document.getElementById('demo-custom');
-		customDemo.data = states;
 
 		const remoteSourceDemo = document.getElementById('demo-remote-source');
 		remoteSourceDemo.addEventListener('d2l-labs-autocomplete-filter-change', (event) => {
@@ -58,7 +44,7 @@
 			// Fake async call
 			setTimeout(() => {
 				remoteSourceDemo.setSuggestions(filteredSuggestions);
-			}, 400);
+			}, 800);
 		});
 
 		// Event listeners to change heading text on selection
@@ -71,8 +57,6 @@
 
 		inputTextDemo.addEventListener('d2l-labs-autocomplete-suggestion-selected',
 			selectionListener('demo-input-text-selected'));
-		customDemo.addEventListener('d2l-labs-autocomplete-suggestion-selected',
-			selectionListener('demo-custom-selected'));
 		remoteSourceDemo.addEventListener('d2l-labs-autocomplete-suggestion-selected',
 			selectionListener('demo-remote-source-selected'));
 		</script>
