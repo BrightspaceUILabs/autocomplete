@@ -22,11 +22,7 @@ class AutocompleteInputText extends LitElement {
 			_showSuggestions: { state: true },
 			_minWidth: { state: true },
 			_filter: { state: true },
-			_suggestions: { state: true },
-			/**
-			* These properties are used by d2l-input-text
-			*/
-			ariaLabel: { type: String, attribute: 'aria-label' }
+			_suggestions: { state: true }
 
 		};
 	}
@@ -93,7 +89,7 @@ class AutocompleteInputText extends LitElement {
 			no-auto-open>
 			<div class="d2l-dropdown-opener">
 				<d2l-input-text
-						aria-label="${this.ariaLabel}"
+						aria-label="${this.getAttribute('aria-label')}"
 						@input=${this._onInput}
 						@keydown=${this._onKeyDown}
 						@focus=${this._onFocus}
