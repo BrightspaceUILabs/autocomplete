@@ -16,7 +16,7 @@
 > - [x] Demo page
 > - [ ] README documentation
 
-Polymer-based web component for integrating autocomplete with text inputs
+Web component for integrating autocomplete with text inputs
 
 ## Installation
 
@@ -45,16 +45,6 @@ autocomplete.data = [
  * E.g., Only return values that match the entered filter exactly
  */
 autocomplete.filterFn = (value, filter) => value === filter;
-```
-
-### Custom Input
-
-```html
-
-<d2l-labs-autocomplete id="my-autocomplete">
-	<input id="my-input" slot="input">
-</d2l-labs-autocomplete>
-<!-- Set data as above -->
 ```
 
 ### Remote Source

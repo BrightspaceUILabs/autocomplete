@@ -1,14 +1,14 @@
 import '../autocomplete-input-text.js';
-import { expect, fixture, html, oneEvent, sendKeys, waitUntil } from '@brightspace-ui/testing';
+import { expect, fixture, html, oneEvent, sendKeys, sendKeysElem, waitUntil } from '@brightspace-ui/testing';
 
 const basicFixture = html`
-		<d2l-labs-autocomplete-input-text id="basic-test">
+		<d2l-labs-autocomplete-input-text>
 		</d2l-labs-autocomplete-input-text>
 `;
 
 const remoteFixture = html`
 	<div>
-		<d2l-labs-autocomplete-input-text remote-source id="remote-source-test">
+		<d2l-labs-autocomplete-input-text remote-source>
 		</d2l-labs-autocomplete-input-text>
 	</div>
 `;
@@ -92,7 +92,7 @@ describe('d2l-labs-autocomplete-input-text', () => {
 				expect(suggestions[1]).to.equal(getSelectedElement());
 			});
 
-			it('should move the selected suggestion to the previous element when the DOWN key is pressed', async() => {
+			it('should move the selected suggestion to the previous element when the UP key is pressed', async() => {
 				await sendKeys('press', UP);
 				await sendKeys('press', UP);
 				expect(suggestions[suggestions.length - 2]).to.equal(getSelectedElement());
@@ -143,7 +143,7 @@ describe('d2l-labs-autocomplete-input-text', () => {
 		it('should fire an event when the input is empty', async() => {
 			setTimeout(() => setInputValue('Alaba'));
 			await oneEvent(autocomplete, 'd2l-labs-autocomplete-filter-change');
-			setTimeout(() => setInputValue(''));
+			setTimeout(() => clearInput());
 			const event = await oneEvent(autocomplete, 'd2l-labs-autocomplete-filter-change');
 			expect(event.detail.value).to.equal('');
 		});
@@ -171,11 +171,15 @@ describe('d2l-labs-autocomplete-input-text', () => {
 
 	/* Helper functions */
 	async function setInputValue(value) {
-		input.focus();
-		input.value = value;
-		input.dispatchEvent(new Event('input', { detail: { value } }));
+		input.value = '';
+		await sendKeysElem(input, 'type', value);
 		await waitUntil(() => autocomplete._filter === value, '_filter property was never updated');
 		await autocomplete.updateComplete;
+	}
+	async function clearInput() {
+		await sendKeysElem(input, 'press', 'Control+a');
+		await sendKeysElem(input, 'press', 'Delete');
+		await setInputValue('');
 	}
 
 	function getSuggestionElements() {

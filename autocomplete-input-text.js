@@ -1,19 +1,15 @@
 import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-content.js';
 import '@brightspace-ui/core/components/dropdown/dropdown.js';
+import '@brightspace-ui/core/components/colors/colors.js';
 import { css, html, LitElement } from 'lit';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 const KeyCodes = { UP: 38, DOWN: 40, ENTER: 13, ESCAPE: 27, HOME: 36, END: 35 };
 class AutocompleteInputText extends LitElement {
-	static get is() { return 'd2l-labs-autocomplete-input-text'; }
 	static get properties() {
 		return {
-			/**
-			* Unique Id for prefixing the autocomplete and input-text
-			*/
-			_uniqueId: { type: String },
 			/**
 			* These properties are used by d2l-labs-autocomplete
 			*/
@@ -30,8 +26,7 @@ class AutocompleteInputText extends LitElement {
 			/**
 			* These properties are used by d2l-input-text
 			*/
-			ariaLabel: { type: String, attribute: 'aria-label' },
-			placeholder: { type: String },
+			ariaLabel: { type: String, attribute: 'aria-label' }
 
 		};
 	}
@@ -39,6 +34,9 @@ class AutocompleteInputText extends LitElement {
 		return [bodyCompactStyles, css`
 			:host {
 				display: flex;
+			}
+			:host([hidden]) {
+				display: none;
 			}
 
 			#d2l-labs-autocomplete-list {
@@ -86,10 +84,11 @@ class AutocompleteInputText extends LitElement {
 		this._uniqueId = getUniqueId();
 
 	}
+	static get is() { return 'd2l-labs-autocomplete-input-text'; }
 
 	render() {
 		return html`<d2l-dropdown
-			@d2l-dropdown-close=${() => this._showSuggestions = false}
+			@d2l-dropdown-close=${this._onDropdownClose}
 			class="d2l-labs-autocomplete-dropdown-wrapper"
 			no-auto-open>
 			<div class="d2l-dropdown-opener">
@@ -101,7 +100,6 @@ class AutocompleteInputText extends LitElement {
 						maxlength="${ifDefined(this.maxLength)}"
 						novalidate
 						autocomplete="list"
-						placeholder="${ifDefined(this.placeholder)}"
 						role="combobox">
 				</d2l-input-text>
 			</div>
@@ -136,15 +134,15 @@ class AutocompleteInputText extends LitElement {
 		</d2l-dropdown>`;
 	}
 
-	setSuggestions(suggestions) {
-		this._suggestions = suggestions;
-	}
-
 	willUpdate(changedProperties) {
 		super.willUpdate(changedProperties);
 		if (changedProperties.has('_filter')) this._filterChanged();
 		if (changedProperties.has('_filter') || changedProperties.has('minLength') || changedProperties.has('_suggestions'))
 			this._showSuggestions = this._suggestions.length > 0 && this._filter.length >= this.minLength;
+	}
+
+	setSuggestions(suggestions) {
+		this._suggestions = suggestions;
 	}
 
 	get _input() {
@@ -184,6 +182,10 @@ class AutocompleteInputText extends LitElement {
 
 	_focusDropdownIndex(index) {
 		this.shadowRoot.querySelectorAll('.d2l-labs-autocomplete-suggestion')[index]?.focus();
+	}
+
+	_onDropdownClose() {
+		this._showSuggestions = false;
 	}
 
 	_onFocus() {
