@@ -1,3 +1,16 @@
 {
-	"extends": "brightspace/polymer-3-config"
+  "extends": "brightspace/lit-config",
+  "globals": {},
+  "overrides": [{
+    "files": [
+      "**/demo/**.html"
+    ],
+    "rules": {
+      "no-console": 0
+    }
+  },
+  {
+    "files": "**/test/*",
+    "extends": "brightspace/testing-config"
+  }]
 }

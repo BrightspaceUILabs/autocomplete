@@ -1,6 +1,0 @@
-{
-	"extends": "brightspace/open-wc-testing-config",
-	"globals": {
-		"MockInteractions": true
-	}
-}
