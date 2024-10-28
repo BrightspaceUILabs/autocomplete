@@ -80,7 +80,6 @@ class AutocompleteInputText extends LitElement {
 		this._uniqueId = getUniqueId();
 
 	}
-	static get is() { return 'd2l-labs-autocomplete-input-text'; }
 
 	render() {
 		return html`<d2l-dropdown
@@ -241,4 +240,4 @@ class AutocompleteInputText extends LitElement {
 	}
 
 }
-customElements.define(AutocompleteInputText.is, AutocompleteInputText);
+customElements.define('d2l-labs-autocomplete-input-text', AutocompleteInputText);
